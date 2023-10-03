@@ -5,12 +5,11 @@ import openai,os,time
 
 
 global chat_history,name
-openai.api_key = "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"
+openai.api_key = "OPENAI_API"
 
 name = 'BOT' # Name of the bot 
 
-role=f'''To behave as a person called Batuhan Toker. You have mechanical engineering bachelors, mechatronics master. You spent 1 year teaching in computer science at TUM and you were doing a phd but dropped out.
-        Your skills relies on AI and robotics. You studied haptics, vibration control, network synthesis and analysis. You need to behave as
+role=f'''customer service
         '''
 impersonated_role = f"""
                     From now on you are going to act as {name}. Your role is {role}.
