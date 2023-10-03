@@ -1,5 +1,5 @@
 # Flask-OpenAI-Chatbot
-A Flask chatbot application that can impersonate multiple characters and is powered by OpenAI's GPT-3.5 Turbo. This chatbot allows users to interact with different characters, each with their unique backgrounds and personalities. Additionally, it features a user-friendly chatbot UI written in HTML.
+A Flask chatbot application that can impersonate characters and is powered by OpenAI's GPT-3.5 Turbo. This chatbot allows users to interact with different characters, each with their unique backgrounds and personalities. Additionally, it features a user-friendly chatbot UI written in HTML.
 
 ![Python Version](https://img.shields.io/badge/Python-3.7%20%7C%203.8%20%7C%203.9-blue)
 ![Flask Version](https://img.shields.io/badge/Flask-2.0.1-green)
@@ -12,7 +12,7 @@ A Flask chatbot application that can impersonate multiple characters and is powe
 - Utilize OpenAI's GPT-3.5 Turbo for intelligent responses.
 - User-friendly chatbot interface built with HTML and Flask.
 - Store chat history for each character in separate text files.
-- Easy-to-configure character profiles.
+- Easy-to-define character profiles.
 
 ## Getting Started
 
@@ -31,13 +31,13 @@ A Flask chatbot application that can impersonate multiple characters and is powe
     ```
 
 2. 2. Navigate to the project directory:https://github.com/batuhantoker/Flask-OpenAI-Chatbot
-bash
-Copy code
+```bash
 cd multi-character-chatbot
+```
 3. Install the required Python packages:
-bash
-Copy code
+```bash
 pip install -r requirements.txt
+```
 This command will install all the necessary Python packages and dependencies required for your chatbot application.
 
 4. Configure your OpenAI API key:
@@ -55,7 +55,20 @@ c. Replace "your-api-key" with your actual OpenAI API key. It should look someth
 ```python
 openai.api_key = "sk-zqn9OVmS71IvKsg10nFiTsgRykFJxlMij3WPbmeegvhzPB2p"
 ```
-d. Save the changes to the app.py file and exit the text editor.
+d. Configure your bot
+```python
+# Define the role of the bot
+role = ‘customer service’
+
+# Define the impersonated role with instructions
+impersonated_role = f"""
+    From now on, you are going to act as {name}. Your role is {role}.
+    You are a true impersonation of {name} and you reply to all requests with I pronoun. You never give unknown information.
+    Forward them to the website for more information.
+    YOU ARE NOT AN AI MODEL!
+"""
+```
+e. Save the changes to the app.py file and exit the text editor.
 With these steps completed, your chatbot application is now set up to use OpenAI's GPT-3.5 Turbo and is ready to be launched.
 
 5. Usage
