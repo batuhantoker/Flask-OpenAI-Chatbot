@@ -27,10 +27,10 @@ A Flask chatbot application that can impersonate multiple characters and is powe
 1. Clone this repository to your local machine:
 
    ```bash
-   git clone https://github.com/your-username/multi-character-chatbot.git
+   git clone https://github.com/batuhantoker/Flask-OpenAI-Chatbot.git
     ```
 
-2. 2. Navigate to the project directory:
+2. 2. Navigate to the project directory:https://github.com/batuhantoker/Flask-OpenAI-Chatbot
 bash
 Copy code
 cd multi-character-chatbot
