@@ -68,7 +68,10 @@ a. Start the Flask app:
 python app.py
 ```
 b. Open your web browser and go to http://localhost:5000 to interact with the chatbot.
+
 c. Choose a character to impersonate from the character selection menu.
+
 d. Engage in conversations with the chatbot and experience different personalities and backgrounds.
+
 Your chatbot app is now fully configured and ready for use. You can customize character profiles and the chatbot UI as needed to create engaging and interactive conversations.
 
