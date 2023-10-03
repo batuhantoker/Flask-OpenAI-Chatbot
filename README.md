@@ -64,9 +64,9 @@ Now that you've completed the setup, you can use your Chatbot App:
 ![Screenshot 2023-10-03 at 19 32 54](https://github.com/batuhantoker/Flask-OpenAI-Chatbot/assets/55883119/acda595c-22b8-40d9-9dc3-2208b181d42a)
 
 a. Start the Flask app:
-bash
-Copy code
+```bash
 python app.py
+```
 b. Open your web browser and go to http://localhost:5000 to interact with the chatbot.
 c. Choose a character to impersonate from the character selection menu.
 d. Engage in conversations with the chatbot and experience different personalities and backgrounds.
