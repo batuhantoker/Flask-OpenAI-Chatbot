@@ -4,6 +4,8 @@ from openai import OpenAI
 import os
 import time
 import json
+import csv
+import random
 
 # Load the config.json file
 with open('config.json') as f:
@@ -36,39 +38,29 @@ chatgpt_output = 'Chat log: /n'
 cwd = os.getcwd()
 i = 1
 
-# Find an available chat history file
-while os.path.exists(os.path.join(cwd, f'chat_history{i}.txt')):
-    i += 1
+# Generate a random 5-digit user ID
+user_id = ''.join([str(random.randint(0, 9)) for _ in range(5)])
 
-history_file = os.path.join(cwd, f'chat_history{i}.txt')
+# Create user directory within the logs directory
+user_dir = os.path.join(cwd, 'logs', f'user_{user_id}')
+os.makedirs(user_dir, exist_ok=True)
 
-# Create a new chat history file
-with open(history_file, 'w') as f:
-    f.write('\n')
+# Define the CSV file path
+csv_file = os.path.join(user_dir, f'user_{user_id}.csv')
 
 # Initialize chat history
 chat_history = ''
+
+# Initialize CSV file with headers
+with open(csv_file, 'w', newline='') as f:
+    writer = csv.writer(f)
+    writer.writerow(['User ID', 'GPT Chatbot', 'User Prompt'])
 
 # Create a Flask web application
 app = Flask(__name__)
 
 # Function to complete chat input using OpenAI's GPT-3.5 Turbo
 def chatcompletion(user_input, impersonated_role, explicit_input, chat_history):
-    # output = openai.ChatCompletion.create(
-    #     model="gpt-3.5-turbo-0301",
-    #     temperature=1,
-    #     presence_penalty=0,
-    #     frequency_penalty=0,
-    #     max_tokens=2000,
-    #     messages=[
-    #         {"role": "system", "content": f"{impersonated_role}. Conversation history: {chat_history}"},
-    #         {"role": "user", "content": f"{user_input}. {explicit_input}"},
-    #     ]
-    # )
-
-    # for item in output['choices']:
-    #     chatgpt_output = item['message']['content']
-
     completion = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
@@ -76,23 +68,21 @@ def chatcompletion(user_input, impersonated_role, explicit_input, chat_history):
             {"role": "user", "content": f"{user_input}. {explicit_input}"},
         ]
     )
-
     return completion.choices[0].message.content.strip()
-
-    return chatgpt_output
 
 # Function to handle user chat input
 def chat(user_input):
     global chat_history, name, chatgpt_output
-    current_day = time.strftime("%d/%m", time.localtime())
-    current_time = time.strftime("%H:%M:%S", time.localtime())
     chat_history += f'\nUser: {user_input}\n'
     chatgpt_raw_output = chatcompletion(user_input, impersonated_role, explicit_input, chat_history).replace(f'{name}:', '')
     chatgpt_output = f'{name}: {chatgpt_raw_output}'
     chat_history += chatgpt_output + '\n'
-    with open(history_file, 'a') as f:
-        f.write('\n'+ current_day+ ' '+ current_time+ ' User: ' +user_input +' \n' + current_day+ ' ' + current_time+  ' ' +  chatgpt_output + '\n')
-        f.close()
+    
+    # Write the interaction to the CSV file
+    with open(csv_file, 'a', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow([user_id, chatgpt_raw_output, user_input])
+    
     return chatgpt_raw_output
 
 # Function to get a response from the chatbot
