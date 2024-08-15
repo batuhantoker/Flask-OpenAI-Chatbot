@@ -1,11 +1,20 @@
 # Import necessary libraries
 from flask import Flask, render_template, request, redirect
-import openai
+from openai import OpenAI
 import os
 import time
+import json
+
+# Load the config.json file
+with open('config.json') as f:
+    config = json.load(f)
+
+# Now you can access the API key using the config dictionary
+my_api_key = config['openai-api-key']
 
 # Set the OpenAI API key
-openai.api_key = "OPENAI_API"
+api_key = my_api_key
+client = OpenAI(api_key=api_key)
 
 # Define the name of the bot
 name = 'BOT'
@@ -45,20 +54,30 @@ app = Flask(__name__)
 
 # Function to complete chat input using OpenAI's GPT-3.5 Turbo
 def chatcompletion(user_input, impersonated_role, explicit_input, chat_history):
-    output = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-0301",
-        temperature=1,
-        presence_penalty=0,
-        frequency_penalty=0,
-        max_tokens=2000,
+    # output = openai.ChatCompletion.create(
+    #     model="gpt-3.5-turbo-0301",
+    #     temperature=1,
+    #     presence_penalty=0,
+    #     frequency_penalty=0,
+    #     max_tokens=2000,
+    #     messages=[
+    #         {"role": "system", "content": f"{impersonated_role}. Conversation history: {chat_history}"},
+    #         {"role": "user", "content": f"{user_input}. {explicit_input}"},
+    #     ]
+    # )
+
+    # for item in output['choices']:
+    #     chatgpt_output = item['message']['content']
+
+    completion = client.chat.completions.create(
+        model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": f"{impersonated_role}. Conversation history: {chat_history}"},
             {"role": "user", "content": f"{user_input}. {explicit_input}"},
         ]
     )
 
-    for item in output['choices']:
-        chatgpt_output = item['message']['content']
+    return completion.choices[0].message.content.strip()
 
     return chatgpt_output
 
