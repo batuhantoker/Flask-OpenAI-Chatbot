@@ -1,5 +1,5 @@
 # Flask-OpenAI-Logging Information
-A Flask web app that can log user and GOT interaction data.
+A Flask web app that can log user and GPT interaction data.
 
 ![Python Version](https://img.shields.io/badge/Python-3.7%20%7C%203.8%20%7C%203.9-blue)
 ![Flask Version](https://img.shields.io/badge/Flask-2.0.1-green)
@@ -18,12 +18,12 @@ A Flask web app that can log user and GOT interaction data.
 1. Clone this repository to your local machine:
 
    ```bash
-   git clone https://github.com/batuhantoker/Flask-OpenAI-Chatbot.git
+   git clone https://github.com/amoralesflor01/GPT_logging_webpage.git
     ```
 
-2. 2. Navigate to the project directory:https://github.com/batuhantoker/Flask-OpenAI-Chatbot
+2. 2. Navigate to the project directory:https://github.com/amoralesflor01/GPT_logging_webpage.git
 ```bash
-cd multi-character-chatbot
+cd GPT_logging_webpage
 ```
 3. Install the required Python packages:
 ```bash
