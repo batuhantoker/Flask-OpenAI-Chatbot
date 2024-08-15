@@ -6,6 +6,7 @@ import time
 import json
 import csv
 import random
+import atexit
 
 # Load the config.json file
 with open('config.json') as f:
@@ -56,6 +57,9 @@ with open(csv_file, 'w', newline='') as f:
     writer = csv.writer(f)
     writer.writerow(['User ID', 'GPT Chatbot', 'User Prompt'])
 
+# Track the start time of the session
+start_time = time.time()
+
 # Create a Flask web application
 app = Flask(__name__)
 
@@ -89,13 +93,11 @@ def chat(user_input):
 def get_response(userText):
     return chat(userText)
 
-# Define app routes
 @app.route("/")
 def index():
     return render_template("index.html")
 
 @app.route("/get")
-# Function for the bot response
 def get_bot_response():
     userText = request.args.get('msg')
     return str(get_response(userText))
@@ -105,6 +107,31 @@ def refresh():
     time.sleep(600) # Wait for 10 minutes
     return redirect('/refresh')
 
-# Run the Flask app
+def save_session_info():
+    # Calculate elapsed time
+    elapsed_time_seconds = time.time() - start_time
+    elapsed_time_minutes_seconds = time.strftime("%M:%S", time.gmtime(elapsed_time_seconds))
+    
+    # Define the JSON file path
+    json_file = os.path.join(user_dir, f'user_{user_id}_info.json')
+    
+    # Create the JSON file with the session information
+    session_info = {
+        'User ID': user_id,
+        'Elapsed Time (Minutes:Seconds)': elapsed_time_minutes_seconds,
+        'Elapsed Time (Seconds)': int(elapsed_time_seconds)
+    }
+    
+    try:
+        # Write the JSON file
+        with open(json_file, 'w') as f:
+            json.dump(session_info, f, indent=4)
+        print(f"JSON file created successfully: {json_file}")
+    except Exception as e:
+        print(f"Failed to create JSON file: {e}")
+
+# Register the save_session_info function to be called when the program exits
+atexit.register(save_session_info)
+
 if __name__ == "__main__":
     app.run()
