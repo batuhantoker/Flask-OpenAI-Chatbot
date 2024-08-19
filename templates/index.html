@@ -332,7 +332,7 @@ height:100%;
 <div class="chat_window">
 
     <div class="top_menu">
-        <div class="title">ChatGPT:</div>
+        <div class="title">Hi, Your User Id is: {{userId}}</div>
     </div>
     <ul class="messages"></ul>
     <div class="bottom_wrapper clearfix">
@@ -445,8 +445,9 @@ return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
             }
         });
             // Add "Writing..." message
+    var userId = {{ userId | tojson }};
     writingMessage = new Message({
-        text: 'Hey, I am a ChatBot. I am designed to help you with identifying Spam and Phishing emails/sms. I support English and Spanish. Please feel free to ask me anything!',
+        text: 'Hey, I am a ChatBot. I am designed to help you with identifying Spam and Phishing emails/sms. I support English and Spanish. Please feel free to ask me anything! Your UserID is ' + userId,
         message_side: 'left'
     });
     writingMessage.draw();
