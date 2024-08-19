@@ -135,6 +135,22 @@ body {
   margin-right: 10px;
 }
 
+/* here is the change */
+
+.messages .message.right .avatar {
+  float: right;
+  width: 50px;
+  height: 50px;
+  background-image: url("https://www.seekpng.com/png/full/428-4287240_no-avatar-user-circle-icon-png.png");
+  background-size: cover;
+  border-radius: 50%;
+  margin-left: 10px;
+}
+
+
+
+/* here is the change */
+
 .messages .message.right .text_wrapper {
   background-color: #c7eafc;
   margin-right: 20px;
@@ -332,13 +348,14 @@ height:100%;
 <div class="chat_window">
 
     <div class="top_menu">
-        <div class="title">ChatGPT:</div>
+        <div class="title">Hi, Your User Id is: {{userId}}</div>
     </div>
     <ul class="messages"></ul>
     <div class="bottom_wrapper clearfix">
         <div class="message_input_wrapper">
             <input class="message_input" placeholder="Type your message here..." />
         </div>
+
         <div class="send_message">
             <div class="icon"></div>
             <div class="text">Send</div>
@@ -445,8 +462,9 @@ return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
             }
         });
             // Add "Writing..." message
+    var userId = {{ userId | tojson }};
     writingMessage = new Message({
-        text: 'Batuhan here, how can I help you today?. Fluent in 95 languages, I am always ready to assist you quickly and efficiently. Just type!',
+        text: 'Hey, I am a ChatBot. I am designed to help you with identifying Spam and Phishing emails/sms. I support English and Spanish. Please feel free to ask me anything! Your UserID is ' + userId,
         message_side: 'left'
     });
     writingMessage.draw();
