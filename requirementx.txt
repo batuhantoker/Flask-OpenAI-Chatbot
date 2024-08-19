@@ -1,2 +1,2 @@
-Flask==2.2.3
-openai==0.27.2
+Flask
+openai
