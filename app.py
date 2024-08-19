@@ -100,7 +100,7 @@ def get_response(userText):
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", userId = user_id)
 
 @app.route("/get")
 def get_bot_response():
