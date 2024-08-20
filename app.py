@@ -12,7 +12,7 @@ import atexit
 with open('config.json') as f:
     config = json.load(f)
 
-# Now you can access the API key using the config dictionary
+# Access API key using the config dictionary
 my_api_key = config['openai-api-key']
 
 # Set the OpenAI API key
@@ -98,19 +98,22 @@ def chat(user_input):
 def get_response(userText):
     return chat(userText)
 
+# Define the route for the home page
 @app.route("/")
 def index():
-    return render_template("index.html", userId = user_id)
+    return render_template("index.html", userId=user_id)  # Render the index.html template, passing the user ID as a variable.
 
+# Define the route for getting the chatbot's response
 @app.route("/get")
 def get_bot_response():
-    userText = request.args.get('msg')
-    return str(get_response(userText))
+    userText = request.args.get('msg')  # Get the user input from the request parameters.
+    return str(get_response(userText))  # Pass the user input to get_response and return the chatbot's response as a string.
 
+# Define a route for refreshing the page
 @app.route('/refresh')
 def refresh():
-    time.sleep(600) # Wait for 10 minutes
-    return redirect('/refresh')
+    time.sleep(600)  # Wait for 10 minutes (600 seconds).
+    return redirect('/refresh')  # Redirect to the /refresh route again, creating a loop.
 
 def save_session_info():
     # Calculate elapsed time
