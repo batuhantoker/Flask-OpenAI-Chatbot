@@ -194,6 +194,10 @@ body {
 }
 
 .bottom_wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
   position: relative;
   width: 100%;
   background-color: #fff;
@@ -201,7 +205,7 @@ body {
   position: absolute;
   bottom: 0;
 }
-.bottom_wrapper .message_input_wrapper {
+/* .bottom_wrapper .message_input_wrapper {
   display: inline-block;
   height: 50px;
   border-radius: 25px;
@@ -209,8 +213,17 @@ body {
   width: calc(100% - 160px);
   position: relative;
   padding: 0 20px;
+} */
+.bottom_wrapper .message_input_wrapper {
+    flex-grow: 1;
+    display: flex;
+    height: 50px;
+    border-radius: 25px;
+    border: 1px solid #bcbdc0;
+    padding: 0 20px;
+    margin-right: 10px;
 }
-.bottom_wrapper .message_input_wrapper .message_input {
+/* .bottom_wrapper .message_input_wrapper .message_input {
   border: none;
   height: 100%;
   box-sizing: border-box;
@@ -218,8 +231,21 @@ body {
   position: absolute;
   outline-width: 0;
   color: gray;
+} */
+.bottom_wrapper .message_input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 16px;
 }
-.bottom_wrapper .send_message {
+.bottom_wrapper .send_message .text {
+    font-size: 18px;
+    font-weight: 300;
+    margin-left: 8px;
+}
+/* .bottom_wrapper .send_message {
   width: 140px;
   height: 50px;
   display: inline-block;
@@ -231,16 +257,54 @@ body {
   transition: all 0.2s linear;
   text-align: center;
   float: right;
+} */
+.bottom_wrapper .send_message {
+    width: 140px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(163, 208, 99);
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    text-align: center;
+    float: right;
+    border-radius: 50px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: rgb(163, 208, 99);
+    transition: 0.2s linear;
 }
+
 .bottom_wrapper .send_message:hover {
   color: #a3d063;
   background-color: #fff;
 }
-.bottom_wrapper .send_message .text {
+/* .bottom_wrapper .send_message .text {
   font-size: 18px;
   font-weight: 300;
   display: inline-block;
   line-height: 48px;
+} */
+.bottom_wrapper .send_message .text {
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 48px;
+    margin-left: 8px;
+}
+.bottom_wrapper .send_message .icon img {
+    height: 24px;
+    width: 24px;
+}
+/* Media query for small screens */
+@media (max-width: 600px) {
+    .bottom_wrapper .send_message .text {
+        display: none;
+    }
+
+    .bottom_wrapper .send_message {
+        width: 50px;
+    }
 }
 
 .message_template {
