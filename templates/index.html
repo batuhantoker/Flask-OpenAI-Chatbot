@@ -13,8 +13,8 @@
 
 <body>
 <div class="container" style="border: 1px solid black; border-radius: 10px; padding: 10px; background-color: #4e919c; margin: auto;">
-    <p style="font-family: Arial; color: white;font-size: 18px">
-	  This Chatbot will be used for a research study, the prompts entered will be recorded and analyzed. Do not enter any information you wish to keep private 
+    <p style="font-family: Arial; color: white;font-size: 20px">
+	  This Chatbot will be used for a research study, the prompts entered will be recorded and analyzed. Do not enter any information you wish to keep private.
     </p>
 </div>
 <div class="chat_window">
@@ -30,7 +30,7 @@
 
         <div class="send_message">
             <div class="icon"></div>
-            <div class="text">Send</div>
+            <div class="text"><b><strong>Send</strong></b></div>
         </div>
         <!--
         <button id="refreshBtn" class="btn btn-primary form-control" onclick="location.reload()">Refresh</button>
@@ -46,6 +46,7 @@
 </div>
 
 </div>
+
 <div class="footer">
   <div id="button"></div>
 <div id="container">
@@ -62,5 +63,6 @@
 <!-- To pass a variable in external JS -->
 <div id="userInfo" data-userid="{{ userId }}"></div>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
 </body>
 </html>
