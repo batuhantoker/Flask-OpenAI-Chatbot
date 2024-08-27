@@ -82,7 +82,7 @@ body {
 }
 .top_menu .title {
   text-align: center;
-  color: #bcbdc0;
+  color: #1b1b1b;
   font-size: 20px;
 }
 
@@ -114,7 +114,7 @@ body {
   border-right-color: #ffe6cb;
 }
 .messages .message.left .text {
-  color: #c48843;
+  color: #1b1b1b;
 }
 .messages .message.left .avatar {
   float: left;
@@ -152,7 +152,7 @@ body {
   border-left-color: #c7eafc;
 }
 .messages .message.right .text {
-  color: #45829b;
+  color: #1b1b1b;
 }
 .messages .message.appeared {
   opacity: 1;
