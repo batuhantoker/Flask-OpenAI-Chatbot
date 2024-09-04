@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect
+# Import necessary libraries
+from flask import Flask, render_template, request, redirect, session
 from openai import OpenAI
 import os
 import time
@@ -6,6 +7,7 @@ import json
 import csv
 import random
 import atexit
+import secrets  # For generating a secure random key
 
 # Load the config.json file
 with open('config.json') as f:
@@ -30,38 +32,60 @@ impersonated_role = f"""
     You are an AI model.
 """
 
-# Initialize variables for chat history
-explicit_input = ""
-chatgpt_output = 'Chat log: /n'
 cwd = os.getcwd()
-i = 1
-
-# Generate a random 5-digit user ID and ensure it is treated as a string
-user_id = ''.join([str(random.randint(0, 9)) for _ in range(5)])
-
-# Ensure the user_id is always treated as a string
-user_id_str = str(user_id).zfill(5)
-
-# Create user directory within the logs directory
-user_dir = os.path.join(cwd, 'logs', f'user_{user_id_str}')
-os.makedirs(user_dir, exist_ok=True)
-
-# Define the CSV file path
-csv_file = os.path.join(user_dir, f'user_{user_id_str}.csv')
-
-# Initialize chat history
-chat_history = ''
-
-# Initialize CSV file with headers and set quoting to avoid interpretation issues
-with open(csv_file, 'w', newline='') as f:
-    writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)  # Ensure all data is quoted
-    writer.writerow(['User ID', 'GPT Chatbot', 'User Prompt'])
-
-# Track the start time of the session
-start_time = time.time()
 
 # Create a Flask web application
-application = Flask(__name__)  # Changed 'app' to 'application'
+application = Flask(__name__)
+
+# Set the secret key using a securely generated random key
+application.secret_key = secrets.token_hex(16)
+
+# Global variable to store session data outside the request context
+user_sessions = {}
+
+# Function to generate a unique user ID
+def generate_user_id():
+    return ''.join([str(random.randint(0, 9)) for _ in range(5)])
+
+# Function to initialize user directory and files
+def initialize_user_data(user_id):
+    # Ensure the user_id is always treated as a string
+    user_id_str = str(user_id).zfill(5)
+    
+    # Create user directory within the logs directory
+    user_dir = os.path.join(cwd, 'logs', f'user_{user_id_str}')
+    os.makedirs(user_dir, exist_ok=True)
+    
+    # Define the CSV file path
+    csv_file = os.path.join(user_dir, f'user_{user_id_str}.csv')
+    
+    # Initialize CSV file with headers and set quoting to avoid interpretation issues
+    with open(csv_file, 'w', newline='') as f:
+        writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)  # Ensure all data is quoted
+        writer.writerow(['User ID', 'GPT Chatbot', 'User Prompt'])
+    
+    return user_dir, csv_file
+
+# Define the route for the home page
+@application.route("/")
+def index():
+    # Check if user_id is already in session
+    if 'user_id' not in session:
+        # Generate a new user ID and store it in the session
+        session['user_id'] = generate_user_id()
+        session['user_dir'], session['csv_file'] = initialize_user_data(session['user_id'])
+        session['start_time'] = time.time()  # Initialize start time when session begins
+        session['chat_history'] = ''  # Initialize chat history in session
+        session['explicit_input'] = ''  # Initialize explicit input in session
+    
+    # Save session data to global user_sessions dictionary
+    user_sessions[session['user_id']] = {
+        'start_time': session['start_time'],
+        'user_dir': session['user_dir'],
+        'chat_history': session['chat_history']
+    }
+    
+    return render_template("index.html", userId=session['user_id'])  # Use session user_id to ensure leading zeros are preserved
 
 # Function to complete chat input using OpenAI's GPT-3.5 Turbo
 def chatcompletion(user_input, impersonated_role, explicit_input, chat_history):
@@ -76,27 +100,27 @@ def chatcompletion(user_input, impersonated_role, explicit_input, chat_history):
 
 # Function to handle user chat input
 def chat(user_input):
-    global chat_history, name, chatgpt_output
+    chat_history = session.get('chat_history', '')
+    explicit_input = session.get('explicit_input', '')  # Retrieve explicit input from session
     chat_history += f'\nUser: {user_input}\n'
     chatgpt_raw_output = chatcompletion(user_input, impersonated_role, explicit_input, chat_history).replace(f'{name}:', '')
     chatgpt_output = f'{name}: {chatgpt_raw_output}'
     chat_history += chatgpt_output + '\n'
+    session['chat_history'] = chat_history  # Update chat history in session
+    
+    # Update global user_sessions dictionary
+    user_sessions[session['user_id']]['chat_history'] = chat_history
     
     # Write the interaction to the CSV file, ensuring user_id_str is a string
-    with open(csv_file, 'a', newline='') as f:
+    with open(session['csv_file'], 'a', newline='') as f:
         writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)  # Ensure all data is quoted
-        writer.writerow([user_id_str, chatgpt_raw_output, user_input])  # Use user_id_str as a string
+        writer.writerow([session['user_id'], chatgpt_raw_output, user_input])  # Use session user_id as a string
     
     return chatgpt_raw_output
 
 # Function to get a response from the chatbot
 def get_response(userText):
     return chat(userText)
-
-# Define the route for the home page
-@application.route("/")
-def index():
-    return render_template("index.html", userId=user_id_str)  # Use user_id_str to ensure leading zeros are preserved
 
 # Define the route for getting the chatbot's response
 @application.route("/get")
@@ -110,31 +134,37 @@ def refresh():
     time.sleep(600)  # Wait for 10 minutes (600 seconds).
     return redirect('/refresh')  # Redirect to the /refresh route again, creating a loop.
 
-def save_session_info():
-    # Calculate elapsed time
-    elapsed_time_seconds = time.time() - start_time
-    elapsed_time_minutes_seconds = time.strftime("%M:%S", time.gmtime(elapsed_time_seconds))
-    
-    # Define the JSON file path
-    json_file = os.path.join(user_dir, f'user_{user_id_str}_info.json')
-    
-    # Create the JSON file with the session information
-    session_info = {
-        'User ID': user_id_str,  # Use user_id_str to ensure leading zeros are preserved
-        'Elapsed Time (Minutes:Seconds)': elapsed_time_minutes_seconds,
-        'Elapsed Time (Seconds)': int(elapsed_time_seconds)
-    }
-    
-    try:
-        # Write the JSON file
-        with open(json_file, 'w') as f:
-            json.dump(session_info, f, indent=4)
-        print(f"JSON file created successfully: {json_file}")
-    except Exception as e:
-        print(f"Failed to create JSON file: {e}")
+# Save session info to file
+def save_user_session_data():
+    for user_id, data in user_sessions.items():
+        start_time = data['start_time']
+        user_dir = data['user_dir']
+        chat_history = data['chat_history']
+        
+        elapsed_time_seconds = time.time() - start_time
+        elapsed_time_minutes_seconds = time.strftime("%M:%S", time.gmtime(elapsed_time_seconds))
+        
+        # Define the JSON file path
+        json_file = os.path.join(user_dir, f'user_{user_id}_info.json')
+        
+        # Create the JSON file with the session information
+        session_info = {
+            'User ID': user_id,  # Use user_id to ensure leading zeros are preserved
+            'Elapsed Time (Minutes:Seconds)': elapsed_time_minutes_seconds,
+            'Elapsed Time (Seconds)': int(elapsed_time_seconds),
+            'Chat History': chat_history
+        }
+        
+        try:
+            # Write the JSON file
+            with open(json_file, 'w') as f:
+                json.dump(session_info, f, indent=4)
+            print(f"JSON file created successfully: {json_file}")
+        except Exception as e:
+            print(f"Failed to create JSON file: {e}")
 
-# Register the save_session_info function to be called when the program exits
-atexit.register(save_session_info)
+# Register the save_user_session_data function to be called when the program exits
+atexit.register(save_user_session_data)
 
 if __name__ == "__main__":
     application.run()  # Changed 'app.run()' to 'application.run()'
