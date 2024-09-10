@@ -1,11 +1,10 @@
 # Import necessary libraries
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, url_for, flash
 from openai import OpenAI
 import os
 import time
 import json
 import csv
-import random
 import atexit
 import secrets  # For generating a secure random key
 
@@ -43,9 +42,8 @@ application.secret_key = secrets.token_hex(16)
 # Global variable to store session data outside the request context
 user_sessions = {}
 
-# Function to generate a unique user ID
-def generate_user_id():
-    return ''.join([str(random.randint(0, 9)) for _ in range(5)])
+# Predefined valid user IDs
+valid_user_ids = ['12345', '67890', '11122', '33344']  # Example valid IDs
 
 # Function to initialize user directory and files
 def initialize_user_data(user_id):
@@ -66,17 +64,35 @@ def initialize_user_data(user_id):
     
     return user_dir, csv_file
 
-# Define the route for the home page
-@application.route("/")
-def index():
-    # Check if user_id is already in session
+# Route for the login page
+@application.route("/", methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        user_id = request.form.get('password')  # Get the user ID from the form (stored in the "password" field)
+        
+        if user_id in valid_user_ids:
+            # Store the valid user ID in the session and initialize their data
+            session['user_id'] = user_id
+            session['user_dir'], session['csv_file'] = initialize_user_data(user_id)
+            session['start_time'] = time.time()  # Initialize start time when session begins
+            session['chat_history'] = ''  # Initialize chat history in session
+            session['explicit_input'] = ''  # Initialize explicit input in session
+
+            # Redirect to the chatbot page
+            return redirect(url_for('chatbot'))
+        else:
+            # Invalid user ID, show an error message
+            flash('Invalid User ID! Please try again.')
+
+    # If GET request, just show the login page
+    return render_template('login.html')
+
+# Route for the chatbot page
+@application.route("/chatbot")
+def chatbot():
+    # Ensure user is logged in by checking the session
     if 'user_id' not in session:
-        # Generate a new user ID and store it in the session
-        session['user_id'] = generate_user_id()
-        session['user_dir'], session['csv_file'] = initialize_user_data(session['user_id'])
-        session['start_time'] = time.time()  # Initialize start time when session begins
-        session['chat_history'] = ''  # Initialize chat history in session
-        session['explicit_input'] = ''  # Initialize explicit input in session
+        return redirect(url_for('login'))  # If not logged in, redirect to login page
     
     # Save session data to global user_sessions dictionary
     user_sessions[session['user_id']] = {
@@ -85,7 +101,7 @@ def index():
         'chat_history': session['chat_history']
     }
     
-    return render_template("index.html", userId=session['user_id'])  # Use session user_id to ensure leading zeros are preserved
+    return render_template("index.html", userId=session['user_id'])  # Pass the userId to the frontend
 
 # Function to complete chat input using OpenAI's GPT-3.5 Turbo
 def chatcompletion(user_input, impersonated_role, explicit_input, chat_history):
@@ -114,9 +130,11 @@ def chat(user_input):
     # Write the interaction to the CSV file, ensuring user_id_str is a string
     with open(session['csv_file'], 'a', newline='') as f:
         writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)  # Ensure all data is quoted
-        writer.writerow([session['user_id'], chatgpt_raw_output, user_input])  # Use session user_id as a string
+        # Update the order: User Prompt in the 2nd column, Chatbot response in the 3rd column
+        writer.writerow([session['user_id'], user_input, chatgpt_raw_output])  # Swap user_input and chatgpt_raw_output
     
     return chatgpt_raw_output
+
 
 # Function to get a response from the chatbot
 def get_response(userText):
@@ -149,7 +167,7 @@ def save_user_session_data():
         
         # Create the JSON file with the session information
         session_info = {
-            'User ID': user_id,  # Use user_id to ensure leading zeros are preserved
+            'User ID': user_id,
             'Elapsed Time (Minutes:Seconds)': elapsed_time_minutes_seconds,
             'Elapsed Time (Seconds)': int(elapsed_time_seconds),
             'Chat History': chat_history
@@ -167,4 +185,4 @@ def save_user_session_data():
 atexit.register(save_user_session_data)
 
 if __name__ == "__main__":
-    application.run()  # Changed 'app.run()' to 'application.run()'
+    application.run()  # Run the application
