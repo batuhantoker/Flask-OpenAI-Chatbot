@@ -45,6 +45,36 @@ user_sessions = {}
 # Predefined valid user IDs
 valid_user_ids = ['12345', '67890', '11122', '33344']  # Example valid IDs
 
+# Load the used and in-use user IDs from a JSON file
+def load_used_ids():
+    if os.path.exists('used_ids.json'):
+        with open('used_ids.json', 'r') as f:
+            return json.load(f)
+    return {"used": [], "in_use": []}
+
+# Save the used and in-use user IDs to a JSON file
+def save_used_ids(used_ids):
+    with open('used_ids.json', 'w') as f:
+        json.dump(used_ids, f)
+
+# Add the user ID to the "used" list after session completes
+def mark_user_id_as_used(user_id):
+    used_ids = load_used_ids()
+    used_ids['used'].append(user_id)
+    save_used_ids(used_ids)
+
+# Mark a user ID as "in use" once logged in
+def mark_user_id_as_in_use(user_id):
+    used_ids = load_used_ids()
+    used_ids['in_use'].append(user_id)
+    save_used_ids(used_ids)
+
+# Remove a user ID from the "in use" list when session ends
+def remove_user_id_from_in_use(user_id):
+    used_ids = load_used_ids()
+    used_ids['in_use'].remove(user_id)
+    save_used_ids(used_ids)
+
 # Function to initialize user directory and files
 def initialize_user_data(user_id):
     # Ensure the user_id is always treated as a string
@@ -67,22 +97,30 @@ def initialize_user_data(user_id):
 # Route for the login page
 @application.route("/", methods=['GET', 'POST'])
 def login():
+    used_ids = load_used_ids()  # Load used IDs at the start
+    
     if request.method == 'POST':
         user_id = request.form.get('password')  # Get the user ID from the form (stored in the "password" field)
-        
-        if user_id in valid_user_ids:
+
+        if user_id in valid_user_ids and user_id not in used_ids['used'] and user_id not in used_ids['in_use']:
+            # Mark the user ID as "in use" immediately upon login
+            mark_user_id_as_in_use(user_id)
+
+            # Generate a unique session token
+            session['session_token'] = secrets.token_hex(16)
+            
             # Store the valid user ID in the session and initialize their data
             session['user_id'] = user_id
             session['user_dir'], session['csv_file'] = initialize_user_data(user_id)
             session['start_time'] = time.time()  # Initialize start time when session begins
             session['chat_history'] = ''  # Initialize chat history in session
             session['explicit_input'] = ''  # Initialize explicit input in session
-
+            
             # Redirect to the chatbot page
             return redirect(url_for('chatbot'))
         else:
-            # Invalid user ID, show an error message
-            flash('Invalid User ID! Please try again.')
+            # Invalid user ID or ID has already been used or is in use, show an error message
+            flash('Invalid, already used, or in-use User ID! Please try again.')
 
     # If GET request, just show the login page
     return render_template('login.html')
@@ -90,17 +128,18 @@ def login():
 # Route for the chatbot page
 @application.route("/chatbot")
 def chatbot():
-    # Ensure user is logged in by checking the session
-    if 'user_id' not in session:
+    # Ensure user is logged in and has a valid session token
+    if 'user_id' not in session or 'session_token' not in session:
         return redirect(url_for('login'))  # If not logged in, redirect to login page
-    
+
     # Save session data to global user_sessions dictionary
     user_sessions[session['user_id']] = {
         'start_time': session['start_time'],
         'user_dir': session['user_dir'],
-        'chat_history': session['chat_history']
+        'chat_history': session['chat_history'],
+        'session_token': session['session_token']
     }
-    
+
     return render_template("index.html", userId=session['user_id'])  # Pass the userId to the frontend
 
 # Function to complete chat input using OpenAI's GPT-3.5 Turbo
@@ -152,19 +191,19 @@ def refresh():
     time.sleep(600)  # Wait for 10 minutes (600 seconds).
     return redirect('/refresh')  # Redirect to the /refresh route again, creating a loop.
 
-# Save session info to file
+# Save session info to file and clean up the "in use" list
 def save_user_session_data():
     for user_id, data in user_sessions.items():
         start_time = data['start_time']
         user_dir = data['user_dir']
         chat_history = data['chat_history']
-        
+
         elapsed_time_seconds = time.time() - start_time
         elapsed_time_minutes_seconds = time.strftime("%M:%S", time.gmtime(elapsed_time_seconds))
-        
+
         # Define the JSON file path
         json_file = os.path.join(user_dir, f'user_{user_id}_info.json')
-        
+
         # Create the JSON file with the session information
         session_info = {
             'User ID': user_id,
@@ -172,7 +211,7 @@ def save_user_session_data():
             'Elapsed Time (Seconds)': int(elapsed_time_seconds),
             'Chat History': chat_history
         }
-        
+
         try:
             # Write the JSON file
             with open(json_file, 'w') as f:
@@ -180,6 +219,11 @@ def save_user_session_data():
             print(f"JSON file created successfully: {json_file}")
         except Exception as e:
             print(f"Failed to create JSON file: {e}")
+
+        # Mark the user ID as used
+        mark_user_id_as_used(user_id)
+        # Remove the user ID from the "in use" list
+        remove_user_id_from_in_use(user_id)
 
 # Register the save_user_session_data function to be called when the program exits
 atexit.register(save_user_session_data)
