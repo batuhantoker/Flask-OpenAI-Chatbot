@@ -8,15 +8,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
-
-
-
 <body>
 <div class="container" style="border: 1px solid black; border-radius: 10px; padding: 10px; background-color: #4e919c; margin: auto;">
     <p style="font-family: Arial; color: white;font-size: 15px">
 	  This Chatbot will be used for a research study, the prompts entered will be recorded and analyzed. Do not enter any information you wish to keep private.
     </p>
 </div>
+<p style="position: absolute;
+            top: 10px;
+            right: 10px;
+            font-weight: bold;
+            font-size: 2rem" id="timer">5:00</p>
 <div class="chat_window">
 
     <div class="top_menu">
@@ -59,6 +61,34 @@
 <!-- To pass a variable in external JS -->
 <div id="userInfo" data-userid="{{ userId }}"></div>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<script>
+    // Set the timer to 5 minutes (300 seconds)
+    let timeRemaining = 300;
+
+    // Function to start the countdown
+    function startCountdown() {
+        const timer = setInterval(function() {
+            timeRemaining--;
+
+            // Calculate minutes and seconds
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+
+            // Display the time in MM:SS format
+            document.getElementById('timer').innerHTML = minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+
+            // If time runs out, clear the timer and redirect to the login page
+            if (timeRemaining <= 0) {
+                clearInterval(timer);
+                alert("Session expired! You will be logged out.");
+                window.location.href = "/";  // Redirect to the login page
+            }
+        }, 1000);  // Update the timer every second (1000ms)
+    }
+
+    // Start the countdown when the page loads
+    window.onload = startCountdown;
+</script>
 
 </body>
 </html>
