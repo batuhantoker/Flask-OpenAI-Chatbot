@@ -94,6 +94,29 @@ def initialize_user_data(user_id):
     
     return user_dir, csv_file
 
+# A timer check helper function
+def session_timeout():
+    # Check if the session has a start time
+    if 'start_time' in session:
+        # Get the current time and the time when the session started
+        current_time = time.time()
+        start_time = session['start_time']
+        
+        # Calculate the elapsed time in seconds
+        elapsed_time = current_time - start_time
+        
+        # If more than 5 minutes (300 seconds) have passed, end the session
+        if elapsed_time > 300:
+            flash('Your session has expired due to inactivity. Please log in again.')
+            # Perform necessary cleanup, like saving session data
+            save_user_session_data()
+            # Clear the session
+            session.clear()
+            # Redirect to the login page
+            return redirect(url_for('login'))
+    return None  # Return None if the session is still valid
+
+
 # Route for the login page
 @application.route("/", methods=['GET', 'POST'])
 def login():
@@ -132,6 +155,11 @@ def chatbot():
     if 'user_id' not in session or 'session_token' not in session:
         return redirect(url_for('login'))  # If not logged in, redirect to login page
 
+    # Checking if the session has expired
+    timeout_redirect = session_timeout()
+    if timeout_redirect:
+        return timeout_redirect  # If session has timed out, redirect to login
+    
     # Save session data to global user_sessions dictionary
     user_sessions[session['user_id']] = {
         'start_time': session['start_time'],
@@ -182,6 +210,12 @@ def get_response(userText):
 # Define the route for getting the chatbot's response
 @application.route("/get")
 def get_bot_response():
+    
+    # Checking if the session has expired
+    timeout_redirect = session_timeout()
+    if timeout_redirect:
+        return timeout_redirect  # If session has timed out, redirect to login
+    
     userText = request.args.get('msg')  # Get the user input from the request parameters.
     return str(get_response(userText))  # Pass the user input to get_response and return the chatbot's response as a string.
 

@@ -36,6 +36,14 @@ body {
   background-color: #edeff2;
   font-family: "Calibri", "Roboto", sans-serif;
 }
+
+.top_nav{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
 .chat_window {
   position: absolute;
   width: calc(100% - 20px);
