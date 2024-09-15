@@ -231,7 +231,7 @@ def refresh():
 
 @application.template_filter('timer_format')
 def timer_format(value_in_seconds):
-    return f"{math.floor(TIMER_LIMIT/60):02}:{(TIMER_LIMIT%60):02}"
+    return f"{math.floor(value_in_seconds/60):02}:{(value_in_seconds%60):02}"
 
 # Save session info to file and clean up the "in use" list
 def save_user_session_data():
