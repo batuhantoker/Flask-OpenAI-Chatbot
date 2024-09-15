@@ -18,7 +18,8 @@
             top: 10px;
             right: 10px;
             font-weight: bold;
-            font-size: 2rem" id="timer">5:00</p>
+            font-size: 2rem" id="timer">{{TIMER_LIMIT|timer_format}}</p>
+
 <div class="chat_window">
 
     <div class="top_menu">
@@ -41,13 +42,13 @@
         -->
     </div>
     <div class="message_template">
-    <li class="message">
-        <div class="avatar"></div>
-        <div class="text_wrapper">
-            <div class="text"></div>
-        </div>
-    </li>
-</div>
+        <li class="message">
+            <div class="avatar"></div>
+            <div class="text_wrapper">
+                <div class="text"></div>
+            </div>
+        </li>
+    </div>
 
 </div>
 
@@ -63,7 +64,7 @@
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 <script>
     // Set the timer to 5 minutes (300 seconds)
-    let timeRemaining = 300;
+    let timeRemaining = {{TIMER_LIMIT}};
 
     // Function to start the countdown
     function startCountdown() {
@@ -80,8 +81,12 @@
             // If time runs out, clear the timer and redirect to the login page
             if (timeRemaining <= 0) {
                 clearInterval(timer);
+                //TODO: Alert doesn't work.
                 alert("Session expired! You will be logged out.");
-                window.location.href = "/";  // Redirect to the login page
+                //TODO: Am pretty sure, this href, makes it that
+                // maybe instead of redirecting to /, /get makes sure python runs before exiting
+                // @Aditya (Rebooting-me)
+                window.location.href = "/get";  // Redirect to the login page
             }
         }, 1000);  // Update the timer every second (1000ms)
     }

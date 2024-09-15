@@ -2,3 +2,5 @@ config.json
 logs/
 robot_avatar_links.txt
 used_ids.json
+myenv
+

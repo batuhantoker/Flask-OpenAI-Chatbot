@@ -7,6 +7,7 @@ import json
 import csv
 import atexit
 import secrets  # For generating a secure random key
+import math
 
 # Load the config.json file
 with open('config.json') as f:
@@ -18,6 +19,9 @@ my_api_key = config['openai-api-key']
 # Set the OpenAI API key
 api_key = my_api_key
 client = OpenAI(api_key=api_key)
+
+# Set the default timer in seconds
+TIMER_LIMIT = 10000
 
 # Define the name of the bot
 name = 'BOT'
@@ -106,7 +110,7 @@ def session_timeout():
         elapsed_time = current_time - start_time
         
         # If more than 5 minutes (300 seconds) have passed, end the session
-        if elapsed_time > 300:
+        if elapsed_time > TIMER_LIMIT:
             flash('Your session has expired due to inactivity. Please log in again.')
             # Perform necessary cleanup, like saving session data
             save_user_session_data()
@@ -134,7 +138,7 @@ def login():
             
             # Store the valid user ID in the session and initialize their data
             session['user_id'] = user_id
-            session['user_dir'], session['csv_file'] = initialize_user_data(user_id)
+            session['user_dir'], session['csv_file'] = initialize_user_data(user_id)   # returns paths 
             session['start_time'] = time.time()  # Initialize start time when session begins
             session['chat_history'] = ''  # Initialize chat history in session
             session['explicit_input'] = ''  # Initialize explicit input in session
@@ -168,7 +172,7 @@ def chatbot():
         'session_token': session['session_token']
     }
 
-    return render_template("index.html", userId=session['user_id'])  # Pass the userId to the frontend
+    return render_template("index.html", userId=session['user_id'], TIMER_LIMIT=TIMER_LIMIT)  # Pass the userId to the frontend
 
 # Function to complete chat input using OpenAI's GPT-3.5 Turbo
 def chatcompletion(user_input, impersonated_role, explicit_input, chat_history):
@@ -224,6 +228,10 @@ def get_bot_response():
 def refresh():
     time.sleep(600)  # Wait for 10 minutes (600 seconds).
     return redirect('/refresh')  # Redirect to the /refresh route again, creating a loop.
+
+@application.template_filter('timer_format')
+def timer_format(value_in_seconds):
+    return f"{math.floor(TIMER_LIMIT/60):02}:{(TIMER_LIMIT%60):02}"
 
 # Save session info to file and clean up the "in use" list
 def save_user_session_data():

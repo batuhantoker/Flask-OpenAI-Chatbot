@@ -8,6 +8,7 @@
                 $message = $($('.message_template').clone().html());
                 $message.addClass(_this.message_side).find('.text').html(_this.text);
                 $('.messages').append($message);
+                // Timeout function required to activate transition animation css
                 return setTimeout(function () {
                     return $message.addClass('appeared');
                 }, 0);
@@ -20,7 +21,7 @@
         message_side = 'right';
         getMessageText = function () {
             var $message_input;
-            $message_input = $('.message_input');
+            $message_input = $('.message_input');   // text box class
             return $message_input.val();
         };
 
@@ -30,8 +31,8 @@
     if (text.trim() === '') {
         return;
     }
-    $('.message_input').val('');
-    $messages = $('.messages');
+    $('.message_input').val('');    // empties the input chat box
+    $messages = $('.messages'); // select the empty unordered list
 
     // Set message_side based on whether the message is from the user or chatbot
     var message_side = 'right';
@@ -85,9 +86,7 @@ return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
 
 $(function() {
 
-	// author badge :)
-	var author = '<div style="position: fixed;bottom: 0;right: 20px;background-color: #fff;box-shadow: 0 4px 8px rgba(0,0,0,.05);border-radius: 3px 3px 0 0;font-size: 12px;padding: 5px 10px;">By <a href="https://twitter.com/mhdnauvalazhar">@mhdnauvalazhar</a> &nbsp;&bull;&nbsp; <a href="https://www.buymeacoffee.com/mhdnauvalazhar">Buy me a Coffee</a></div>';
-	$("body").append(author);
+	$("body")
 
 	$("input[type='password'][data-eye]").each(function(i) {
 		var $this = $(this),
