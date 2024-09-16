@@ -8,6 +8,7 @@ import csv
 import atexit
 import secrets  # For generating a secure random key
 import math
+import openai
 
 # Load the config.json file
 with open('config.json') as f:
@@ -94,7 +95,7 @@ def initialize_user_data(user_id):
     # Initialize CSV file with headers and set quoting to avoid interpretation issues
     with open(csv_file, 'w', newline='') as f:
         writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)  # Ensure all data is quoted
-        writer.writerow(['User ID', 'GPT Chatbot', 'User Prompt'])
+        writer.writerow(['User ID', 'User Prompt', 'GPT Chatbot'])
     
     return user_dir, csv_file
 
@@ -175,34 +176,53 @@ def chatbot():
     return render_template("index.html", userId=session['user_id'], TIMER_LIMIT=TIMER_LIMIT)  # Pass the userId to the frontend
 
 # Function to complete chat input using OpenAI's GPT-3.5 Turbo
-def chatcompletion(user_input, impersonated_role, explicit_input, chat_history):
-    completion = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": f"{impersonated_role}. Conversation history: {chat_history}"},
-            {"role": "user", "content": f"{user_input}. {explicit_input}"},
-        ]
-    )
-    return completion.choices[0].message.content.strip()
+def chatcompletion(conversation_history):
+
+    try:
+        completion = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=conversation_history
+        )
+        return completion.choices[0].message.content.strip()
+    except Exception as e:
+        print("OpenAI Error:", e)
+        return "Failed to generate, please try again!"
 
 # Function to handle user chat input
 def chat(user_input):
-    chat_history = session.get('chat_history', '')
-    explicit_input = session.get('explicit_input', '')  # Retrieve explicit input from session
-    chat_history += f'\nUser: {user_input}\n'
-    chatgpt_raw_output = chatcompletion(user_input, impersonated_role, explicit_input, chat_history).replace(f'{name}:', '')
-    chatgpt_output = f'{name}: {chatgpt_raw_output}'
-    chat_history += chatgpt_output + '\n'
-    session['chat_history'] = chat_history  # Update chat history in session
+    conversation_history = session.get('chat_history',[])
+    
+    # If empty, add initial System instruction
+    if conversation_history == [] or conversation_history == '':
+        conversation_history = []
+        tmp = {
+            "role": "system",
+            "content": impersonated_role
+        }
+        conversation_history.append(tmp)
+
+    # Sometimes flask sends the session stuff as a string instead. Weird.    
+    if type(conversation_history) == str:
+        conversation_history = eval(conversation_history)
+    
+    # Add user input
+    conversation_history.append({"role": "user", "content": user_input})
+    # Call GPT
+    chatgpt_raw_output = chatcompletion(conversation_history)
+    # Add GPT Response
+    conversation_history.append({"role": "assistant", "content": chatgpt_raw_output})
+
+    
+    session['chat_history'] = conversation_history  # Update chat history in session
     
     # Update global user_sessions dictionary
-    user_sessions[session['user_id']]['chat_history'] = chat_history
+    user_sessions[session['user_id']]['chat_history'] = conversation_history
     
     # Write the interaction to the CSV file, ensuring user_id_str is a string
     with open(session['csv_file'], 'a', newline='') as f:
         writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)  # Ensure all data is quoted
-        # Update the order: User Prompt in the 2nd column, Chatbot response in the 3rd column
-        writer.writerow([session['user_id'], user_input, chatgpt_raw_output])  # Swap user_input and chatgpt_raw_output
+        # User ID, User Input, GPT Response
+        writer.writerow([session['user_id'], user_input, chatgpt_raw_output])
     
     return chatgpt_raw_output
 
