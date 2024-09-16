@@ -41,10 +41,12 @@ name = 'BOT'
 # Define the role of the bot
 role = 'Chatbot'
 
-# Define the impersonated role with instructions
+# Define the impersonated role with instructions @girma_terfa
 impersonated_role = f"""
     From now on, you are going to act as {name}. Your role is {role}.
-    You are an AI model.
+    You are an AI model specialized in detecting spam emails.
+    Only provide feedback on whether the input text is spam or not.
+    If the input is unrelated to emails or spam detection, politely inform the user that you cannot assist with that query.
 """
 
 cwd = os.getcwd()
