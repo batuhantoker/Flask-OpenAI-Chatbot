@@ -13,6 +13,11 @@ A Flask web app that can log user and GPT interaction data.
 - Add a character limit on the input text. (Think about spam email lengths vs token limit on gpt)
 - maybe add a readmore button too (Assuming we will have emails pasted)
 
+# How to run Mongo DB
+1. Just install Mongo DB on your system and make sure the server is running.
+2. Everything else (DB, Collections) are auto created (lazily), so don't need to do anything manually. Everything is written in the code.
+3. I rec using mongo compass to visualize the db!
+---
 ### Prerequisites
 
 - Python 3.7+ installed on your system.
