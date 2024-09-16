@@ -7,6 +7,12 @@ A Flask web app that can log user and GPT interaction data.
 
 ## Getting Started
 
+# Future TODO
+- Update README
+- Added convo history to the DB (Remove csv and json) (JAY)
+- Add a character limit on the input text. (Think about spam email lengths vs token limit on gpt)
+- maybe add a readmore button too (Assuming we will have emails pasted)
+
 ### Prerequisites
 
 - Python 3.7+ installed on your system.
