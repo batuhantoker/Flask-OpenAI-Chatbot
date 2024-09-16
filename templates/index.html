@@ -9,9 +9,10 @@
 </head>
 
 <body>
+
 <div class="container" style="border: 1px solid black; border-radius: 10px; padding: 10px; background-color: #4e919c; margin: auto;">
     <p style="font-family: Arial; color: white;font-size: 15px">
-	  This Chatbot will be used for a research study, the prompts entered will be recorded and analyzed. Do not enter any information you wish to keep private.
+        This Chatbot will be used for a research study, the prompts entered will be recorded and analyzed. Do not enter any information you wish to keep private.
     </p>
 </div>
 <p style="position: absolute;
@@ -20,8 +21,15 @@
             font-weight: bold;
             font-size: 2rem" id="timer">{{TIMER_LIMIT|timer_format}}</p>
 
-<div class="chat_window">
 
+<!-- Add tab buttons @girma_terfa -->
+<div class="container" style="margin-bottom: 20px; text-align: center;">
+    <button class="btn btn-info" onclick="showTab('chat')">Chat</button>
+    <button class="btn btn-info" onclick="showTab('email')">View Email</button>
+</div>
+
+<!-- Chat Window -->
+<div id="chat" class="chat_window">
     <div class="top_menu">
         <div class="title">Hi, Your User Id is: {{userId}}</div>
     </div>
@@ -37,19 +45,15 @@
             </div>
             <div class="text"><b><strong>Send</strong></b></div>
         </div>
-        <!--
-        <button id="refreshBtn" class="btn btn-primary form-control" onclick="location.reload()">Refresh</button>
-        -->
     </div>
     <div class="message_template">
-        <li class="message">
-            <div class="avatar"></div>
-            <div class="text_wrapper">
-                <div class="text"></div>
-            </div>
-        </li>
-    </div>
-
+            <li class="message">
+                <div class="avatar"></div>
+                <div class="text_wrapper">
+                    <div class="text"></div>
+                </div>
+            </li>
+        </div>
 </div>
 
 
@@ -62,10 +66,37 @@
         End Session
 </button>
 
+<!-- Email View (hidden initially) -->
+<div id="email" style="display: none; padding: 20px; border: 1px solid black; border-radius: 10px; background-color: #f9f9f9;">
+    <h3>Email Content</h3>
+    <div id="emailContent">
+        <!-- The content of the email will be dynamically inserted here -->
+        <p>No email content available.</p>
+    </div>
+</div>
 
 <!-- To pass a variable in external JS -->
 <div id="userInfo" data-userid="{{ userId }}"></div>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+<!-- JavaScript to Switch Between Tabs @girma_terfa -->
+<script>
+    function showTab(tabId) {
+        // Show chat or email view based on button click
+        if (tabId === 'chat') {
+            document.getElementById('chat').style.display = 'block';
+            document.getElementById('email').style.display = 'none';
+        } else if (tabId === 'email') {
+            document.getElementById('chat').style.display = 'none';
+            document.getElementById('email').style.display = 'block';
+        }
+    }
+
+    // Function to update email content (this can be triggered in your script.js when an email is detected)
+    function updateEmailContent(emailContent) {
+        document.getElementById('emailContent').innerHTML = emailContent;
+    }
+</script>
 <script>
     // Set the timer to 5 minutes (300 seconds)
     let timeRemaining = {{TIMER_LIMIT}};
