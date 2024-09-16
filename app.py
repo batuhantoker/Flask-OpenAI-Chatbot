@@ -8,7 +8,16 @@ import csv
 import atexit
 import secrets  # For generating a secure random key
 import math
-import openai
+import data_classes.mongo_setup as mongo_setup
+import services.data_service as svc
+from services.create_accounts_in_db import run_create_accounts
+
+
+# Connect with Mongo DB
+mongo_setup.global_init()
+
+# Make sure all userIds are loaded into DB
+run_create_accounts()
 
 # Load the config.json file
 with open('config.json') as f:
@@ -47,8 +56,8 @@ application.secret_key = secrets.token_hex(16)
 # Global variable to store session data outside the request context
 user_sessions = {}
 
-# Predefined valid user IDs
-valid_user_ids = ['12345', '67890', '11122', '33344']  # Example valid IDs
+# # Predefined valid user IDs
+# valid_user_ids = ['12345', '67890', '11122', '33344']  # Example valid IDs
 
 # Load the used and in-use user IDs from a JSON file
 def load_used_ids():
@@ -130,7 +139,8 @@ def login():
     if request.method == 'POST':
         user_id = request.form.get('password')  # Get the user ID from the form (stored in the "password" field)
 
-        if user_id in valid_user_ids and user_id not in used_ids['used'] and user_id not in used_ids['in_use']:
+        existing_user = svc.find_account_by_user_id(user_id)
+        if existing_user and user_id not in used_ids['used'] and user_id not in used_ids['in_use']:
             # Mark the user ID as "in use" immediately upon login
             mark_user_id_as_in_use(user_id)
 
