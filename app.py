@@ -33,7 +33,7 @@ api_key = my_api_key
 client = OpenAI(api_key=api_key)
 
 # Set the default timer in seconds
-TIMER_LIMIT = 300
+TIMER_LIMIT = 100
 
 # Define the name of the bot
 name = 'BOT'
@@ -74,22 +74,22 @@ def save_used_ids(used_ids):
         json.dump(used_ids, f)
 
 # Add the user ID to the "used" list after session completes
-def mark_user_id_as_used(user_id):
-    used_ids = load_used_ids()
-    used_ids['used'].append(user_id)
-    save_used_ids(used_ids)
+# def mark_user_id_as_used(user_id):
+#     used_ids = load_used_ids()
+#     used_ids['used'].append(user_id)
+#     save_used_ids(used_ids)
 
 # Mark a user ID as "in use" once logged in
-def mark_user_id_as_in_use(user_id):
-    used_ids = load_used_ids()
-    used_ids['in_use'].append(user_id)
-    save_used_ids(used_ids)
+# def mark_user_id_as_in_use(user_id):
+#     used_ids = load_used_ids()
+#     used_ids['in_use'].append(user_id)
+#     save_used_ids(used_ids)
 
 # Remove a user ID from the "in use" list when session ends
-def remove_user_id_from_in_use(user_id):
-    used_ids = load_used_ids()
-    used_ids['in_use'].remove(user_id)
-    save_used_ids(used_ids)
+# def remove_user_id_from_in_use(user_id):
+#     used_ids = load_used_ids()
+#     used_ids['in_use'].remove(user_id)
+#     save_used_ids(used_ids)
 
 # Function to initialize user directory and files
 def initialize_user_data(user_id):
@@ -163,15 +163,9 @@ def login():
             else:
                 start_time = svc.start_timer_by_User(existing_user)
             
-            print("HIIIII")
-            print(start_time)
-            print(type(start_time))
-            print(time)
-            print(type(time.time()))
-
 
             # Mark the user ID as "in use" immediately upon login
-            mark_user_id_as_in_use(user_id)
+            # mark_user_id_as_in_use(user_id)
 
             # Generate a unique session token
             session['session_token'] = secrets.token_hex(16)
@@ -181,6 +175,8 @@ def login():
             session['user_dir'], session['csv_file'] = initialize_user_data(user_id)   # returns paths 
             session['start_time'] = start_time  # Initialize start time when session begins
             session['chat_history'] = []  # Initialize chat history in session
+            # TODO Known ISSUE new device would again activate login function, making all the session variables blank. Need to use DB to make it consistent!
+            # TODO Can drop json and csv file. No longer needed.
             
             # Redirect to the chatbot page
             return redirect(url_for('chatbot'))
@@ -276,6 +272,10 @@ def get_response(userText):
 # Define the route for getting the chatbot's response
 @application.route("/get")
 def get_bot_response():
+
+    # Checking if server logged out! (Due to tab sync issues) (Can't be fixed until UI timer and Python timer are exactly the same)
+    if 'user_id' not in session or 'session_token' not in session:
+        return redirect(url_for('login'))  # If not logged in, redirect to login page
     
     # Checking if the session has expired
     timeout_redirect = session_timeout()
@@ -324,10 +324,10 @@ def save_user_session_data():
         except Exception as e:
             print(f"Failed to create JSON file: {e}")
 
-        # Mark the user ID as used
-        mark_user_id_as_used(user_id)
-        # Remove the user ID from the "in use" list
-        remove_user_id_from_in_use(user_id)
+        # # Mark the user ID as used
+        # mark_user_id_as_used(user_id)
+        # # Remove the user ID from the "in use" list
+        # remove_user_id_from_in_use(user_id)
 
 # Register the save_user_session_data function to be called when the program exits
 atexit.register(save_user_session_data)

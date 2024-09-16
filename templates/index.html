@@ -78,6 +78,8 @@
             // Display the time in MM:SS format
             document.getElementById('timer').innerHTML = minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
 
+            // TODO Somehow sync with the server side code for exact same display across tabs/devices.
+            
             // If time runs out, clear the timer and redirect to the login page
             if (timeRemaining <= 0) {
                 clearInterval(timer);
