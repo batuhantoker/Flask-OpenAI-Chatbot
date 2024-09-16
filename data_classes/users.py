@@ -8,6 +8,7 @@ class User(mongoengine.Document):
 
     timer_is_running = mongoengine.BooleanField(default=False)
     # TODO Maybe Add logic to handle pausing the timer too.
+    # TODO Maybe Add end time and try to handle it.
     start_time = mongoengine.DateTimeField(default=datetime.datetime.now)
 
     # conversation_history = mongoengine.EmbeddedDocumentListField(Conversation)
