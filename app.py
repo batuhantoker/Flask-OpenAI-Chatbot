@@ -123,17 +123,9 @@ def session_timeout():
         
         # If more than 5 minutes (300 seconds) have passed, end the session
         if elapsed_time > TIMER_LIMIT:
-            flash('Your session has expired due to inactivity. Please log in again.')
-            # Perform necessary cleanup, like saving session data
-            save_user_session_data()
-            # Clear the session
-            session.clear()
-            # Redirect to the login page
-            # TODO Redirect to a logout page instead. 
-            # maybe with instructions on how to ask for extra time
-            # if needed
-            return redirect(url_for('login'))
+            return redirect(url_for('end-session'))
     return None  # Return None if the session is still valid
+    
 
 
 # Route for the login page
@@ -332,15 +324,18 @@ def save_user_session_data():
 
 # Function that will end the session for the user, either button was pressed or 
 # time is over.
-@application.route("/end-session", methods=['POST'])
+@application.route("/end-session")
 def end_session():
-    # Save session data and clean up
+    flash('Your session has expired due to inactivity. Please log in again.')
+    # Perform necessary cleanup, like saving session data
     save_user_session_data()
-    
     # Clear the session
     session.clear()
-
-    return 'Session Ended', 200
+    # Redirect to the login page
+    # TODO Redirect to a logout page instead. 
+    # maybe with instructions on how to ask for extra time
+    # if needed
+    return redirect(url_for('login'))
 
 
 

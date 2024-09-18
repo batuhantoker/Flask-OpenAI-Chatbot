@@ -103,7 +103,7 @@
             alert("Session will be terminated. You will be logged out.");
         
                 // Redirect to the session ending logic or login page
-                window.location.href = "/get"; // This should match the logic for session termination
+                window.location.href = "/end-session"; // This should match the logic for session termination
             }
         
             // Attach event listener to the "End Session" button
