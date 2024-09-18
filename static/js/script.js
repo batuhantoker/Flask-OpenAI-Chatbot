@@ -94,6 +94,25 @@
         });
         writingMessage.draw();
 
+        //-----------------------
+
+        // @Sadrac Work Button
+        // Function to terminate the session
+        function endSession() {
+            // Show alert before session ends
+            alert("Session will be terminated. You will be logged out.");
+        
+                // Redirect to the session ending logic or login page
+                window.location.href = "/end-session"; // This should match the logic for session termination
+            }
+        
+            // Attach event listener to the "End Session" button
+        document
+            .getElementById("end-session-btn")
+            .addEventListener("click", function () {
+            endSession();
+        });
+
     });
 }.call(this));
 

@@ -33,7 +33,7 @@ api_key = my_api_key
 client = OpenAI(api_key=api_key)
 
 # Set the default timer in seconds
-TIMER_LIMIT = 300
+TIMER_LIMIT = 30
 
 # Define the name of the bot
 name = 'BOT'
@@ -123,17 +123,9 @@ def session_timeout():
         
         # If more than 5 minutes (300 seconds) have passed, end the session
         if elapsed_time > TIMER_LIMIT:
-            flash('Your session has expired due to inactivity. Please log in again.')
-            # Perform necessary cleanup, like saving session data
-            save_user_session_data()
-            # Clear the session
-            session.clear()
-            # Redirect to the login page
-            # TODO Redirect to a logout page instead. 
-            # maybe with instructions on how to ask for extra time
-            # if needed
-            return redirect(url_for('login'))
+            return redirect(url_for('end-session'))
     return None  # Return None if the session is still valid
+    
 
 
 # Route for the login page
@@ -328,6 +320,24 @@ def save_user_session_data():
         # mark_user_id_as_used(user_id)
         # # Remove the user ID from the "in use" list
         # remove_user_id_from_in_use(user_id)
+
+
+# Function that will end the session for the user, either button was pressed or 
+# time is over.
+@application.route("/end-session")
+def end_session():
+    flash('Your session has expired due to inactivity. Please log in again.')
+    # Perform necessary cleanup, like saving session data
+    save_user_session_data()
+    # Clear the session
+    session.clear()
+    # Redirect to the login page
+    # TODO Redirect to a logout page instead. 
+    # maybe with instructions on how to ask for extra time
+    # if needed
+    return redirect(url_for('login'))
+
+
 
 # Register the save_user_session_data function to be called when the program exits
 atexit.register(save_user_session_data)
