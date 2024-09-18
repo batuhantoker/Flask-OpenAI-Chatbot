@@ -33,7 +33,7 @@ api_key = my_api_key
 client = OpenAI(api_key=api_key)
 
 # Set the default timer in seconds
-TIMER_LIMIT = 300
+TIMER_LIMIT = 30
 
 # Define the name of the bot
 name = 'BOT'
@@ -328,6 +328,21 @@ def save_user_session_data():
         # mark_user_id_as_used(user_id)
         # # Remove the user ID from the "in use" list
         # remove_user_id_from_in_use(user_id)
+
+
+# Function that will end the session for the user, either button was pressed or 
+# time is over.
+@application.route("/end-session", methods=['POST'])
+def end_session():
+    # Save session data and clean up
+    save_user_session_data()
+    
+    # Clear the session
+    session.clear()
+
+    return 'Session Ended', 200
+
+
 
 # Register the save_user_session_data function to be called when the program exits
 atexit.register(save_user_session_data)
