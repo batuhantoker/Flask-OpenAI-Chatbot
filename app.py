@@ -125,7 +125,7 @@ def session_timeout():
         
         # If more than 5 minutes (300 seconds) have passed, end the session
         if elapsed_time > TIMER_LIMIT:
-            return redirect(url_for('end-session'))
+            return redirect(url_for('end_session'))
     return None  # Return None if the session is still valid
     
 
