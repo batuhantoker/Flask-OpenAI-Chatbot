@@ -5,6 +5,8 @@ import os
 import time
 import json
 import csv
+import pandas as pd
+import random
 import atexit
 import secrets  # For generating a secure random key
 import math
@@ -33,7 +35,7 @@ api_key = my_api_key
 client = OpenAI(api_key=api_key)
 
 # Set the default timer in seconds
-TIMER_LIMIT = 30
+TIMER_LIMIT = 60
 
 # Define the name of the bot
 name = 'BOT'
@@ -105,12 +107,13 @@ def initialize_user_data(user_id):
     # Define the CSV file path
     csv_file = os.path.join(user_dir, f'user_{user_id_str}.csv')
     
-    # Initialize CSV file with headers and set quoting to avoid interpretation issues
+    # Initialize CSV file with headers
     with open(csv_file, 'w', newline='') as f:
         writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)  # Ensure all data is quoted
-        writer.writerow(['User ID', 'User Prompt', 'GPT Chatbot'])
+        writer.writerow(['User ID', 'User Prompt', 'GPT Chatbot', 'Email Subject', 'Email Content', 'Dataset', 'Type'])
     
     return user_dir, csv_file
+
 
 # A timer check helper function
 def session_timeout():
@@ -182,30 +185,30 @@ def login():
     return render_template('login.html')
 
 # Route for the chatbot page
-@application.route("/chatbot")
-def chatbot():
-    # Ensure user is logged in and has a valid session token
-    if 'user_id' not in session or 'session_token' not in session:
-        return redirect(url_for('login'))  # If not logged in, redirect to login page
+# @application.route("/chatbot")
+# def chatbot():
+#     # Ensure user is logged in and has a valid session token
+#     if 'user_id' not in session or 'session_token' not in session:
+#         return redirect(url_for('login'))  # If not logged in, redirect to login page
 
-    # Checking if the session has expired
-    timeout_redirect = session_timeout()
-    if timeout_redirect:
-        return timeout_redirect  # If session has timed out, redirect to login
+#     # Checking if the session has expired
+#     timeout_redirect = session_timeout()
+#     if timeout_redirect:
+#         return timeout_redirect  # If session has timed out, redirect to login
     
-    end_time = session['start_time'] + datetime.timedelta(seconds=TIMER_LIMIT)
-    current_time = datetime.datetime.now(datetime.timezone.utc)
-    time_left = math.ceil((end_time - current_time).total_seconds())
+#     end_time = session['start_time'] + datetime.timedelta(seconds=TIMER_LIMIT)
+#     current_time = datetime.datetime.now(datetime.timezone.utc)
+#     time_left = math.ceil((end_time - current_time).total_seconds())
 
-    # Save session data to global user_sessions dictionary
-    user_sessions[session['user_id']] = {
-        'start_time': session['start_time'],
-        'user_dir': session['user_dir'],
-        'chat_history': session['chat_history'],
-        'session_token': session['session_token'],
-    }
+#     # Save session data to global user_sessions dictionary
+#     user_sessions[session['user_id']] = {
+#         'start_time': session['start_time'],
+#         'user_dir': session['user_dir'],
+#         'chat_history': session['chat_history'],
+#         'session_token': session['session_token'],
+#     }
 
-    return render_template("index.html", userId=session['user_id'], TIMER_LIMIT=time_left)  # Pass the userId to the frontend
+#     return render_template("index.html", userId=session['user_id'], TIMER_LIMIT=time_left)  # Pass the userId to the frontend
 
 # Function to complete chat input using OpenAI's GPT-3.5 Turbo
 def chatcompletion(conversation_history):
@@ -222,7 +225,7 @@ def chatcompletion(conversation_history):
 
 # Function to handle user chat input
 def chat(user_input):
-    conversation_history = session.get('chat_history',[])
+    conversation_history = session.get('chat_history', [])
     
     # If empty, add initial System instruction
     if conversation_history == [] or conversation_history == '':
@@ -233,28 +236,52 @@ def chat(user_input):
         }
         conversation_history.append(tmp)
 
-    # Sometimes flask sends the session stuff as a string instead. Weird.    
+    # Sometimes Flask sends the session stuff as a string instead. Weird.
     if type(conversation_history) == str:
         conversation_history = eval(conversation_history)
     
-    # Add user input
+    # Add user input to the conversation
     conversation_history.append({"role": "user", "content": user_input})
-    # Call GPT
+    
+    # Call GPT-3.5 Turbo to get a response
     chatgpt_raw_output = chatcompletion(conversation_history)
-    # Add GPT Response
+    
+    # Add GPT response to the conversation
     conversation_history.append({"role": "assistant", "content": chatgpt_raw_output})
-
     
-    session['chat_history'] = conversation_history  # Update chat history in session
+    # Save the conversation history in the session
+    session['chat_history'] = conversation_history
     
-    # Update global user_sessions dictionary
+    # Update the global user_sessions dictionary
     user_sessions[session['user_id']]['chat_history'] = conversation_history
     
-    # Write the interaction to the CSV file, ensuring user_id_str is a string
+    # Retrieve the email details from the session for logging
+    email_subject = user_sessions[session['user_id']].get('email_subject', '')
+    email_content = user_sessions[session['user_id']].get('email_content', '')
+    dataset_name = user_sessions[session['user_id']].get('dataset_name', '')
+
+    # Determine the type based on the dataset
+    if dataset_name == 'easy_ham.csv':
+        email_type = 'HAM'
+    elif dataset_name == 'spam.csv':
+        email_type = 'SPAM'
+    else:
+        email_type = ''  # In case there's no matching dataset
+    
+    # Write the interaction to the CSV file with the new columns and headers
     with open(session['csv_file'], 'a', newline='') as f:
-        writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)  # Ensure all data is quoted
-        # User ID, User Input, GPT Response
-        writer.writerow([session['user_id'], user_input, chatgpt_raw_output])
+        writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
+        
+        # Write user ID, User Input, GPT Response, Email Subject, Email Content, Dataset, Type
+        writer.writerow([
+            session['user_id'], 
+            user_input, 
+            chatgpt_raw_output, 
+            email_subject, 
+            email_content, 
+            dataset_name,
+            email_type
+        ])
     
     return chatgpt_raw_output
 
@@ -262,6 +289,71 @@ def chat(user_input):
 # Function to get a response from the chatbot
 def get_response(userText):
     return chat(userText)
+
+#######################################################
+
+# Function to randomly select an email from the CSV files
+def get_random_email():
+    # Define paths for the CSV files
+    easy_ham_path = os.path.join(cwd, 'emails', 'easy_ham.csv')
+    spam_path = os.path.join(cwd, 'emails', 'spam.csv')
+    
+    # Randomly choose which dataset to pick from
+    chosen_dataset = random.choice([easy_ham_path, spam_path])
+    
+    # Read the CSV file into a pandas DataFrame
+    df = pd.read_csv(chosen_dataset)
+    
+    # Select a random row (email) from the DataFrame
+    random_email = df.sample(n=1).iloc[0]
+    
+    # Extract the subject, content, and dataset name
+    email_subject = random_email['Subject']
+    email_content = random_email['Email Content']
+    dataset_name = os.path.basename(chosen_dataset)  # either 'easy_ham.csv' or 'spam.csv'
+    
+    return email_subject, email_content, dataset_name
+
+# Modify the chatbot route to pass email data to the template
+@application.route("/chatbot")
+def chatbot():
+    # Ensure user is logged in and has a valid session token
+    if 'user_id' not in session or 'session_token' not in session:
+        return redirect(url_for('login'))  # If not logged in, redirect to login page
+
+    # Checking if the session has expired
+    timeout_redirect = session_timeout()
+    if timeout_redirect:
+        return timeout_redirect  # If session has timed out, redirect to login
+    
+    end_time = session['start_time'] + datetime.timedelta(seconds=TIMER_LIMIT)
+    current_time = datetime.datetime.now(datetime.timezone.utc)
+    time_left = math.ceil((end_time - current_time).total_seconds())
+
+    # Fetch a random email to display
+    email_subject, email_content, dataset_name = get_random_email()
+
+    # Save session data to global user_sessions dictionary
+    user_sessions[session['user_id']] = {
+        'start_time': session['start_time'],
+        'user_dir': session['user_dir'],
+        'chat_history': session['chat_history'],
+        'session_token': session['session_token'],
+        'email_subject': email_subject,
+        'email_content': email_content,
+        'dataset_name': dataset_name,
+    }
+
+    return render_template(
+        "index.html", 
+        userId=session['user_id'], 
+        TIMER_LIMIT=time_left,
+        email_subject=email_subject,
+        email_content=email_content,
+        dataset_name=dataset_name
+    )  # Pass the userId, timer, and email data to the frontend
+
+#######################################################
 
 # Define the route for getting the chatbot's response
 @application.route("/get")
