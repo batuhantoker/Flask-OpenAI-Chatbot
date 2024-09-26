@@ -67,13 +67,14 @@
         End Session
 </button>
 
-<!-- Email View (hidden initially) -->
+<!-- Email View (shown when the "View Email" button is clicked) -->
 <div id="email" style="display: none; padding: 20px; border: 1px solid black; border-radius: 10px; background-color: #f9f9f9;">
-    <h3>Email Content</h3>
+    <h3>Email Subject: {{ email_subject }}</h3>
     <div id="emailContent">
         <!-- The content of the email will be dynamically inserted here -->
-        <p>No email content available.</p>
+        <p>{{ email_content }}</p>
     </div>
+    <!--    <p><strong>Dataset:</strong> {{ dataset_name }}</p>    -->
 </div>
 
 <!-- To pass a variable in external JS -->
