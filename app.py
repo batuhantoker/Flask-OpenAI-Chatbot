@@ -35,7 +35,7 @@ api_key = my_api_key
 client = OpenAI(api_key=api_key)
 
 # Set the default timer in seconds
-TIMER_LIMIT = 60
+TIMER_LIMIT = 300
 
 # Define the name of the bot
 name = 'BOT'
@@ -242,12 +242,14 @@ def chat(user_input):
     
     # Add user input to the conversation
     conversation_history.append({"role": "user", "content": user_input})
+    svc.append_conversation(session['user_id'], is_bot=False, content=user_input)
     
     # Call GPT-3.5 Turbo to get a response
     chatgpt_raw_output = chatcompletion(conversation_history)
     
     # Add GPT response to the conversation
     conversation_history.append({"role": "assistant", "content": chatgpt_raw_output})
+    svc.append_conversation(session['user_id'], is_bot=True, content=chatgpt_raw_output)
     
     # Save the conversation history in the session
     session['chat_history'] = conversation_history
@@ -350,7 +352,7 @@ def chatbot():
         TIMER_LIMIT=time_left,
         email_subject=email_subject,
         email_content=email_content,
-        dataset_name=dataset_name
+        dataset_name=dataset_name   # TODO: Maybe remove if not being used? @Alex
     )  # Pass the userId, timer, and email data to the frontend
 
 #######################################################
