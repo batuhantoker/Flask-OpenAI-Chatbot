@@ -11,7 +11,7 @@ class User(mongoengine.Document):
     # TODO Maybe Add end time and try to handle it.
     start_time = mongoengine.DateTimeField(default=datetime.datetime.now)
 
-    # conversation_history = mongoengine.EmbeddedDocumentListField(Conversation)
+    conversation_history = mongoengine.EmbeddedDocumentListField(Conversation)
 
 
     meta = {

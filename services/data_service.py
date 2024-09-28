@@ -1,4 +1,5 @@
 from data_classes.users import User
+from data_classes.conversation import Conversation
 import datetime
 
 def create_account(user_id: str) -> User:
@@ -24,5 +25,16 @@ def start_timer_by_User(existing_user: User) -> datetime.datetime:
     existing_user.save()
     
     return start_time
+
+
+def append_conversation(user_id, is_bot, content):
+    conv_history = Conversation()
+
+    conv_history.is_bot = is_bot
+    conv_history.content = content
+
+    existing_user = find_account_by_user_id(user_id)
+    existing_user.conversation_history.append(conv_history)
+    existing_user.save()
 
 
