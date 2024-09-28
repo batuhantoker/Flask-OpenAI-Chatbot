@@ -51,6 +51,8 @@ impersonated_role = f"""
     If the input is unrelated to emails or spam detection, politely inform the user that you cannot assist with that query.
 """
 
+initial_message = 'Hey, I am a ChatBot. I am designed to help you with identifying Spam and Phishing emails/sms. I support English and Spanish. Please feel free to ask me anything! Your UserID is '
+
 cwd = os.getcwd()
 
 # Create a Flask web application
@@ -159,6 +161,10 @@ def login():
                     start_time = start_time.replace(tzinfo=datetime.timezone.utc)  
             else:
                 start_time = svc.start_timer_by_User(existing_user)
+            
+            # Check if conversation history exists, if not create with inital message
+            if existing_user.conversation_history == []:
+                svc.append_conversation(user_id, is_bot=True, content=initial_message+user_id)
             
 
             # Mark the user ID as "in use" immediately upon login
@@ -346,13 +352,16 @@ def chatbot():
         'dataset_name': dataset_name,
     }
 
+    existing_user = svc.find_account_by_user_id(session['user_id'])
+
     return render_template(
         "index.html", 
         userId=session['user_id'], 
         TIMER_LIMIT=time_left,
         email_subject=email_subject,
         email_content=email_content,
-        dataset_name=dataset_name   # TODO: Maybe remove if not being used? @Alex
+        dataset_name=dataset_name,   # TODO: Maybe remove if not being used? @Alex
+        convo_history = existing_user.conversation_history
     )  # Pass the userId, timer, and email data to the frontend
 
 #######################################################
@@ -379,9 +388,16 @@ def refresh():
     time.sleep(600)  # Wait for 10 minutes (600 seconds).
     return redirect('/refresh')  # Redirect to the /refresh route again, creating a loop.
 
+
 @application.template_filter('timer_format')
 def timer_format(value_in_seconds):
     return f"{math.floor(value_in_seconds/60):02}:{(value_in_seconds%60):02}"
+
+
+@application.template_filter('message_side_format')
+def message_side_format(is_bot):
+    return "left" if is_bot else "right"
+
 
 # Save session info to file and clean up the "in use" list
 def save_user_session_data():
