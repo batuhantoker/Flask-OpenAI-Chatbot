@@ -64,38 +64,12 @@ application.secret_key = secrets.token_hex(16)
 # Global variable to store session data outside the request context
 user_sessions = {}
 
-# # Predefined valid user IDs
-# valid_user_ids = ['12345', '67890', '11122', '33344']  # Example valid IDs
-
-# Load the used and in-use user IDs from a JSON file
-def load_used_ids():
-    if os.path.exists('used_ids.json'):
-        with open('used_ids.json', 'r') as f:
-            return json.load(f)
-    return {"used": [], "in_use": []}
 
 # Save the used and in-use user IDs to a JSON file
 def save_used_ids(used_ids):
     with open('used_ids.json', 'w') as f:
         json.dump(used_ids, f)
 
-# Add the user ID to the "used" list after session completes
-# def mark_user_id_as_used(user_id):
-#     used_ids = load_used_ids()
-#     used_ids['used'].append(user_id)
-#     save_used_ids(used_ids)
-
-# Mark a user ID as "in use" once logged in
-# def mark_user_id_as_in_use(user_id):
-#     used_ids = load_used_ids()
-#     used_ids['in_use'].append(user_id)
-#     save_used_ids(used_ids)
-
-# Remove a user ID from the "in use" list when session ends
-# def remove_user_id_from_in_use(user_id):
-#     used_ids = load_used_ids()
-#     used_ids['in_use'].remove(user_id)
-#     save_used_ids(used_ids)
 
 # Function to initialize user directory and files
 def initialize_user_data(user_id):
@@ -138,8 +112,11 @@ def session_timeout():
 # Route for the login page
 @application.route("/", methods=['GET', 'POST'])
 def login():
-    used_ids = load_used_ids()  # Load used IDs at the start
+    # Check if already logged in, direct redirect
+    if 'user_id' in session or 'session_token' in session:
+        return redirect(url_for('chatbot'))
     
+
     if request.method == 'POST':
         user_id = request.form.get('password')  # Get the user ID from the form (stored in the "password" field)
 
@@ -175,6 +152,7 @@ def login():
             
             # Store the valid user ID in the session and initialize their data
             session['user_id'] = user_id
+            session["email_id"] = existing_user.email_id
             session['user_dir'], session['csv_file'] = initialize_user_data(user_id)   # returns paths 
             session['start_time'] = start_time  # Initialize start time when session begins
             session['chat_history'] = []  # Initialize chat history in session
@@ -190,31 +168,6 @@ def login():
     # If GET request, just show the login page
     return render_template('login.html')
 
-# Route for the chatbot page
-# @application.route("/chatbot")
-# def chatbot():
-#     # Ensure user is logged in and has a valid session token
-#     if 'user_id' not in session or 'session_token' not in session:
-#         return redirect(url_for('login'))  # If not logged in, redirect to login page
-
-#     # Checking if the session has expired
-#     timeout_redirect = session_timeout()
-#     if timeout_redirect:
-#         return timeout_redirect  # If session has timed out, redirect to login
-    
-#     end_time = session['start_time'] + datetime.timedelta(seconds=TIMER_LIMIT)
-#     current_time = datetime.datetime.now(datetime.timezone.utc)
-#     time_left = math.ceil((end_time - current_time).total_seconds())
-
-#     # Save session data to global user_sessions dictionary
-#     user_sessions[session['user_id']] = {
-#         'start_time': session['start_time'],
-#         'user_dir': session['user_dir'],
-#         'chat_history': session['chat_history'],
-#         'session_token': session['session_token'],
-#     }
-
-#     return render_template("index.html", userId=session['user_id'], TIMER_LIMIT=time_left)  # Pass the userId to the frontend
 
 # Function to complete chat input using OpenAI's GPT-3.5 Turbo
 def chatcompletion(conversation_history):
@@ -263,34 +216,6 @@ def chat(user_input):
     # Update the global user_sessions dictionary
     user_sessions[session['user_id']]['chat_history'] = conversation_history
     
-    # Retrieve the email details from the session for logging
-    email_subject = user_sessions[session['user_id']].get('email_subject', '')
-    email_content = user_sessions[session['user_id']].get('email_content', '')
-    dataset_name = user_sessions[session['user_id']].get('dataset_name', '')
-
-    # Determine the type based on the dataset
-    if dataset_name == 'easy_ham.csv':
-        email_type = 'HAM'
-    elif dataset_name == 'spam.csv':
-        email_type = 'SPAM'
-    else:
-        email_type = ''  # In case there's no matching dataset
-    
-    # Write the interaction to the CSV file with the new columns and headers
-    with open(session['csv_file'], 'a', newline='') as f:
-        writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
-        
-        # Write user ID, User Input, GPT Response, Email Subject, Email Content, Dataset, Type
-        writer.writerow([
-            session['user_id'], 
-            user_input, 
-            chatgpt_raw_output, 
-            email_subject, 
-            email_content, 
-            dataset_name,
-            email_type
-        ])
-    
     return chatgpt_raw_output
 
 
@@ -298,29 +223,6 @@ def chat(user_input):
 def get_response(userText):
     return chat(userText)
 
-#######################################################
-
-# Function to randomly select an email from the CSV files
-def get_random_email():
-    # Define paths for the CSV files
-    easy_ham_path = os.path.join(cwd, 'emails', 'easy_ham.csv')
-    spam_path = os.path.join(cwd, 'emails', 'spam.csv')
-    
-    # Randomly choose which dataset to pick from
-    chosen_dataset = random.choice([easy_ham_path, spam_path])
-    
-    # Read the CSV file into a pandas DataFrame
-    df = pd.read_csv(chosen_dataset)
-    
-    # Select a random row (email) from the DataFrame
-    random_email = df.sample(n=1).iloc[0]
-    
-    # Extract the subject, content, and dataset name
-    email_subject = random_email['Subject']
-    email_content = random_email['Email Content']
-    dataset_name = os.path.basename(chosen_dataset)  # either 'easy_ham.csv' or 'spam.csv'
-    
-    return email_subject, email_content, dataset_name
 
 # Modify the chatbot route to pass email data to the template
 @application.route("/chatbot")
@@ -339,7 +241,10 @@ def chatbot():
     time_left = math.ceil((end_time - current_time).total_seconds())
 
     # Fetch a random email to display
-    email_subject, email_content, dataset_name = get_random_email()
+    email = svc.getEmailRecordByUuid(session["email_id"])
+
+    email_subject = email["Email Content"].values[0]
+    email_content = email["Email Content"].values[0]
 
     # Save session data to global user_sessions dictionary
     user_sessions[session['user_id']] = {
@@ -347,9 +252,6 @@ def chatbot():
         'user_dir': session['user_dir'],
         'chat_history': session['chat_history'],
         'session_token': session['session_token'],
-        'email_subject': email_subject,
-        'email_content': email_content,
-        'dataset_name': dataset_name,
     }
 
     existing_user = svc.find_account_by_user_id(session['user_id'])
@@ -360,7 +262,6 @@ def chatbot():
         TIMER_LIMIT=time_left,
         email_subject=email_subject,
         email_content=email_content,
-        dataset_name=dataset_name,   # TODO: Maybe remove if not being used? @Alex
         convo_history = existing_user.conversation_history
     )  # Pass the userId, timer, and email data to the frontend
 

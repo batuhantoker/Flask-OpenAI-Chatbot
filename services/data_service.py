@@ -1,11 +1,15 @@
 from data_classes.users import User
 from data_classes.conversation import Conversation
 import datetime
+import pandas as pd
+import numpy as np
 
 def create_account(user_id: str) -> User:
     user = User()
     user.user_id = user_id
     user.timer_is_running = False   # Is only true after login
+
+    user.email_id = pickRandomEmailUuid()
     
     user.save() # This will actually update Mongo db. (Mongo follows lazy execution)
 
@@ -38,3 +42,31 @@ def append_conversation(user_id, is_bot, content):
     existing_user.save()
 
 
+def pickRandomEmailUuid() -> str:
+    df = pd.read_csv("emails/merged_emails.csv")
+    # Separate the rows based on classification
+    class_0 = df[df['Classification'] == 0]
+    class_1 = df[df['Classification'] == 1]
+
+    # Calculate the minimum count between the two classes
+    min_count = min(len(class_0), len(class_1))
+
+    # Randomly sample 'min_count' entries from both classes to get equal proportions
+    sample_0 = class_0.sample(n=min_count, random_state=np.random.randint(1000))
+    sample_1 = class_1.sample(n=min_count, random_state=np.random.randint(1000))
+
+    # Combine the samples
+    balanced_sample = pd.concat([sample_0, sample_1])
+
+    # Shuffle the result to ensure randomness
+    balanced_sample = balanced_sample.sample(frac=1, random_state=np.random.randint(1000)).reset_index(drop=True)
+    random_row = balanced_sample.sample(n=1, random_state=np.random.randint(1000))
+
+    return random_row["UniqueID"].values[0]
+
+
+def getEmailRecordByUuid(uuid: str) -> pd.core.frame.DataFrame:
+    df = pd.read_csv("emails/merged_emails.csv")
+    single_record = df[df["UniqueID"]==uuid]
+
+    return single_record
