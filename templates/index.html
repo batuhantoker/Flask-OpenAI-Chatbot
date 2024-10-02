@@ -99,32 +99,128 @@
     </div>
 
     <!-- End Session Button -->
-    <button
-      id="end-session-btn"
-      class="btn btn-danger"
-      style="position: fixed; bottom: 10px; right: 10px"
-    >
-      End Session
-    </button>
+  <button
+    id="end-session-btn"      
+    class="btn btn-danger"
+    style="position: fixed; bottom: 10px; right: 10px"
+  >
+    End Session
+  </button>
 
     <!-- Email View (shown when the "View Email" button is clicked) -->
     <div
-      id="email"
-      style="
-        display: none;
-        padding: 20px;
-        border: 1px solid black;
-        border-radius: 10px;
-        background-color: #f9f9f9;
-      "
+    id="email"
+    style="
+      display: none;
+      padding: 20px;
+      border: 1px solid #d1d1d1;
+      border-radius: 10px;
+      background-color: #ffffff;
+      width: 80%;
+      margin: 20px auto;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    "
     >
-      <h3>Email Subject: {{ email_subject }}</h3>
-      <div id="emailContent">
-        <!-- The content of the email will be dynamically inserted here -->
-        <p>{{ email_content }}</p>
-      </div>
-      <!--    <p><strong>Dataset:</strong> {{ dataset_name }}</p>    -->
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="font-weight: bold; font-size: 1.5rem;">Email Subject:</h3>
+      <button
+        id="copy-button"
+        class="btn btn-secondary"
+        onclick="copyToClipboard()"
+        style="display: flex; align-items: center; background-color: grey; color: white;"
+      >
+        <i class="fa-solid fa-copy" style="margin-right: 5px;"></i> Copy
+      </button>
     </div>
+    <p id="emailSubject" style="font-size: 1.25rem; margin-left: 10px;">{{ email_subject }}</p>
+    <div id="emailContent" style="margin-top: 20px;">
+      <h3 style="font-weight: bold; font-size: 1.5rem;">Email Content:</h3>
+      <p id="emailBody" style="font-size: 1.25rem; margin-left: 10px;">{{ email_content }}</p>
+    </div>
+
+    <!-- Styles for Improved UI/UX -->
+    <style>
+      .email-container {
+          display: none; /* Initially hidden */
+          padding: 20px;
+          border: 1px solid #d1d1d1;
+          border-radius: 10px;
+          background-color: #ffffff;
+          max-width: 700px;
+          margin: 20px auto;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .email-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+      }
+
+      .email-heading {
+          font-size: 1.3em;
+          font-weight: bold;
+          color: #333;
+          margin-top: 15px;
+      }
+
+      .email-text {
+          font-size: 1.1em;
+          color: #555;
+          margin-bottom: 15px;
+          line-height: 1.6;
+      }
+
+      .copy-btn {
+          background-color: #6c757d; /* Grey color for the button */
+          color: white;
+          border: none;
+          padding: 5px 10px;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 0.9em;
+          display: flex;
+          align-items: center;
+      }
+
+      .copy-btn:hover {
+          background-color: #5a6268; /* Darker grey on hover */
+      }
+
+      .fa-copy {
+          margin-right: 5px;
+      }
+    </style>
+
+    <!-- JavaScript for Copy Functionality -->
+    <script>
+      function copyToClipboard() {
+          // Get the email subject and body text
+          const emailSubject = document.getElementById('emailSubject').textContent;
+          const emailBody = document.getElementById('emailBody').textContent;
+    
+          // Combine the subject and body into one text with proper labels
+          const combinedText = `Email Subject: \n${emailSubject}\n\nEmail Content:\n${emailBody}`;
+    
+          // Write the combined text to the clipboard
+          navigator.clipboard.writeText(combinedText).then(() => {
+              // Show feedback to the user by changing the button to green and updating the text
+              const copyButton = document.getElementById('copy-button');
+              copyButton.innerHTML = '<i class="fa-solid fa-copy" style="margin-right: 5px;"></i> Copied!';
+              copyButton.style.backgroundColor = '#3cb371';
+    
+              // Restore the button text and color after a short delay
+              setTimeout(() => {
+                  copyButton.innerHTML = '<i class="fa-solid fa-copy" style="margin-right: 5px;"></i> Copy';
+                  copyButton.style.backgroundColor = 'grey';
+              }, 1000); // Restore the button text and color after 1 second
+          }).catch(err => {
+              console.error('Could not copy text: ', err);
+          });
+      }
+    </script>
+
+
 
     <!-- To pass a variable in external JS -->
     <!-- No longer used, moved the usage inside python -->
@@ -143,13 +239,14 @@
           document.getElementById("chat").style.display = "none";
           document.getElementById("email").style.display = "block";
         }
-      }
-
-      // Function to update email content (this can be triggered in your script.js when an email is detected)
-      function updateEmailContent(emailContent) {
-        document.getElementById("emailContent").innerHTML = emailContent;
+    
+        // Ensure the End Session button stays visible
+        const endSessionButton = document.getElementById("end-session-btn");
+        endSessionButton.style.display = "block";
       }
     </script>
+    
+    
     <script>
       // Set the timer to 5 minutes (300 seconds)
       let timeRemaining = {{TIMER_LIMIT}};

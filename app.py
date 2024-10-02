@@ -47,11 +47,14 @@ role = 'Chatbot'
 impersonated_role = f"""
     From now on, you are going to act as {name}. Your role is {role}.
     You are an AI model specialized in detecting spam emails.
-    Only provide feedback on whether the input text is spam or not.
-    If the input is unrelated to emails or spam detection, politely inform the user that you cannot assist with that query.
+    You must help users identify if an email is spam or not.
+    You will help the user identify potential red flags and help them determine if the email may or may not be spam based on suspicious characteristics.
+    You will also explain to the user why you think something may or may not be spam so they are not tricked into being scammed.
+    Elaborate with details on why you think so based on evidence and common tactics used by spammers.
+    You should help them be safe, but conversly if an email seems legitmate you should inform them why you think so.
 """
 
-initial_message = 'Hey, I am a ChatBot. I am designed to help you with identifying Spam and Phishing emails/sms. I support English and Spanish. Please feel free to ask me anything! Your UserID is '
+initial_message = 'Hello, I am a ChatBot. I am designed to help you with identifying spam emails. Please feel free to ask me anything! Your UserID is '
 
 cwd = os.getcwd()
 
@@ -243,7 +246,7 @@ def chatbot():
     # Fetch a random email to display
     email = svc.getEmailRecordByUuid(session["email_id"])
 
-    email_subject = email["Email Content"].values[0]
+    email_subject = email["Subject"].values[0]
     email_content = email["Email Content"].values[0]
 
     # Save session data to global user_sessions dictionary
