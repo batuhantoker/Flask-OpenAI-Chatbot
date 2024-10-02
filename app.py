@@ -38,21 +38,22 @@ client = OpenAI(api_key=api_key)
 TIMER_LIMIT = 300
 
 # Define the name of the bot
-name = 'BOT'
+name = 'Assitant'
 
 # Define the role of the bot
-role = 'Chatbot'
+role = 'Helpful Chatbot'
 
 # Define the impersonated role with instructions @girma_terfa
 impersonated_role = f"""
-    From now on, you are going to act as {name}. Your role is {role}.
-    You are an AI model specialized in detecting spam emails.
-    You must help users identify if an email is spam or not.
-    You will help the user identify potential red flags and help them determine if the email may or may not be spam based on suspicious characteristics.
-    You will also explain to the user why you think something may or may not be spam so they are not tricked into being scammed.
-    Elaborate with details on why you think so based on evidence and common tactics used by spammers.
-    You should help them be safe, but conversly if an email seems legitmate you should inform them why you think so.
-"""
+    From now on, you are going to act as {name}. Your role is {role}."""
+# """
+#     You are an AI model specialized in detecting spam emails.
+#     You must help users identify if an email is spam or not.
+#     You will help the user identify potential red flags and help them determine if the email may or may not be spam based on suspicious characteristics.
+#     You will also explain to the user why you think something may or may not be spam so they are not tricked into being scammed.
+#     Elaborate with details on why you think so based on evidence and common tactics used by spammers.
+#     You should help them be safe, but conversly if an email seems legitmate you should inform them why you think so.
+# """
 
 initial_message = 'Hello, I am a ChatBot. I am designed to help you with identifying spam emails. Please feel free to ask me anything! Your UserID is '
 
