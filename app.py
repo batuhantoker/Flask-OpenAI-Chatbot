@@ -230,6 +230,7 @@ def get_response(userText):
 
 # Modify the chatbot route to pass email data to the template
 @application.route("/chatbot")
+@application.route("/chatbot")
 def chatbot():
     # Ensure user is logged in and has a valid session token
     if 'user_id' not in session or 'session_token' not in session:
@@ -247,6 +248,7 @@ def chatbot():
     # Fetch a random email to display
     email = svc.getEmailRecordByUuid(session["email_id"])
 
+    email_sender = email["From"].values[0]
     email_subject = email["Subject"].values[0]
     email_content = email["Email Content"].values[0]
 
@@ -264,10 +266,11 @@ def chatbot():
         "index.html", 
         userId=session['user_id'], 
         TIMER_LIMIT=time_left,
+        email_sender=email_sender,
         email_subject=email_subject,
         email_content=email_content,
-        convo_history = existing_user.conversation_history
-    )  # Pass the userId, timer, and email data to the frontend
+        convo_history=existing_user.conversation_history
+    ) # Pass the userId, timer, and email data to the frontend
 
 #######################################################
 
