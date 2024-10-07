@@ -11,6 +11,11 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    >
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   </head>
 
@@ -109,6 +114,7 @@
 
 
     <!-- Email View (shown when the "View Email" button is clicked) -->
+  <!--
   <div
     id="email"
     style="
@@ -149,6 +155,72 @@
     <h3 style="font-weight: bold; font-size: 1.5rem; margin-top: 20px;">Email Content:</h3>
     <p id="emailBody" style="font-size: 1.25rem; margin-left: 10px;">{{ email_content }}</p>
   </div>
+  -->
+
+  <!-- Email View (shown when the "View Email" button is clicked) -->
+  <!-- Email View (shown when the "View Email" button is clicked) -->
+  <!-- Gmail Email View -->
+  <!-- Email View (Initially hidden) -->
+  <!-- Gmail Email View (Updated to match Gmail UI) -->
+  <!-- Gmail Full Email View with Sidebar, Header, and Email Content -->
+  <!-- Gmail Email View in a Contained Box -->
+  <!-- Gmail Email View in a Contained Box -->
+  <div id="gmail-ui" class="gmail-ui-container" style="display: none;">
+    <!-- Gmail Header -->
+    <div class="gmail-top-bar">
+      <div class="gmail-logo">
+        <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" alt="Gmail Logo" class="gmail-logo-icon" />
+        <span>Gmail</span>
+      </div>
+      <div class="gmail-search">
+        <input type="text" class="gmail-search-bar" placeholder="Search mail" />
+      </div>
+      <div class="gmail-top-icons">
+        <img src="https://ssl.gstatic.com/ui/v1/icons/mail/profile_mask2.png" alt="User Profile" class="gmail-profile-icon" />
+      </div>
+    </div>
+
+    <!-- Gmail Sidebar (Fixed Position and Non-Overlapping) -->
+    <div class="gmail-sidebar">
+      <ul>
+        <li><a href="#"><i class="fa fa-inbox"></i> Inbox</a></li>
+        <li><a href="#"><i class="fa fa-star"></i> Starred</a></li>
+        <li><a href="#"><i class="fa fa-clock"></i> Snoozed</a></li>
+        <li><a href="#"><i class="fa fa-paper-plane"></i> Sent</a></li>
+        <li><a href="#"><i class="fa fa-file"></i> Drafts</a></li>
+      </ul>
+    </div>
+
+    <!-- Gmail Content -->
+    <div class="gmail-content">
+      <div class="gmail-email-header">
+        <h2>{{ email_subject }}</h2>
+        <div class="gmail-email-sender">
+          <strong>{{ email_sender }}</strong>
+          <span>&lt;{{ email_sender_email }}&gt;</span>
+        </div>
+        <div class="gmail-recipient">
+          <span>To: username@gmail.com</span> <!-- Hardcoded recipient -->
+        </div>
+        <div class="gmail-email-date">
+          <span>Thu, 5 Oct 2024, 4:00 PM</span> <!-- Hardcoded date -->
+        </div>
+      </div>
+
+      <div class="gmail-body">
+        <p>{{ email_content }}</p>
+      </div>
+
+      <div class="gmail-reply-options">
+        <button class="gmail-reply-btn"><i class="fa fa-reply"></i> Reply</button>
+        <button class="gmail-reply-all-btn"><i class="fa fa-reply-all"></i> Reply All</button>
+        <button class="gmail-forward-btn"><i class="fa fa-forward"></i> Forward</button>
+      </div>
+    </div>
+  </div>
+
+
+
 
 
 
@@ -177,62 +249,23 @@
           color: #333;
           margin-top: 15px;
       }
-
-      .email-text {
-          font-size: 1.1em;
-          color: #555;
-          margin-bottom: 15px;
-          line-height: 1.6;
-      }
-
-      .copy-btn {
-          background-color: #6c757d; /* Grey color for the button */
-          color: white;
-          border: none;
-          padding: 5px 10px;
-          border-radius: 5px;
-          cursor: pointer;
-          font-size: 0.9em;
-          display: flex;
-          align-items: center;
-      }
-
-      .copy-btn:hover {
-          background-color: #5a6268; /* Darker grey on hover */
-      }
-
-      .fa-copy {
-          margin-right: 5px;
-      }
     </style>
 
     <!-- JavaScript for Copy Functionality -->
     <script>
-      function copyToClipboard() {
-        // Get the email sender, subject, and body text
-        const emailSender = document.getElementById('emailSender').textContent;
-        const emailSubject = document.getElementById('emailSubject').textContent;
-        const emailBody = document.getElementById('emailBody').textContent;
-  
-        // Combine the sender, subject, and body into one text with proper labels
-        const combinedText = `\n\nEmail Sender: \n${emailSender}\n\nEmail Subject: \n${emailSubject}\n\nEmail Content:\n${emailBody}`;
-  
-        // Write the combined text to the clipboard
-        navigator.clipboard.writeText(combinedText).then(() => {
-            // Show feedback to the user by changing the button to green and updating the text
-            const copyButton = document.getElementById('copy-button');
-            copyButton.innerHTML = '<i class="fa-solid fa-copy" style="margin-right: 5px;"></i> Copied!';
-            copyButton.style.backgroundColor = '#3cb371';
-  
-            // Restore the button text and color after a short delay
-            setTimeout(() => {
-                copyButton.innerHTML = '<i class="fa-solid fa-copy" style="margin-right: 5px;"></i> Copy';
-                copyButton.style.backgroundColor = 'grey';
-            }, 2000); // Restore the button text and color after 2 seconds
-        }).catch(err => {
-            console.error('Could not copy text: ', err);
-        });
-      } 
+      // Add event listeners to the buttons
+      document.querySelector('.gmail-reply-btn').addEventListener('click', () => {
+        alert('Reply functionality to be implemented.');
+      });
+
+      document.querySelector('.gmail-reply-all-btn').addEventListener('click', () => {
+        alert('Reply All functionality to be implemented.');
+      });
+
+      document.querySelector('.gmail-forward-btn').addEventListener('click', () => {
+        alert('Forward functionality to be implemented.');
+      });
+   
     </script>
 
 
@@ -246,19 +279,15 @@
     <!-- JavaScript to Switch Between Tabs @girma_terfa -->
     <script>
       function showTab(tabId) {
-        // Show chat or email view based on button click
-        if (tabId === "chat") {
-          document.getElementById("chat").style.display = "block";
-          document.getElementById("email").style.display = "none";
-        } else if (tabId === "email") {
-          document.getElementById("chat").style.display = "none";
-          document.getElementById("email").style.display = "block";
+        document.getElementById('chat').style.display = 'none';
+        document.getElementById('gmail-ui').style.display = 'none'; // Hide Gmail UI
+      
+        if (tabId === 'chat') {
+          document.getElementById('chat').style.display = 'block';
+        } else if (tabId === 'email') {
+          document.getElementById('gmail-ui').style.display = 'block'; // Show Gmail UI in container
         }
-    
-        // Ensure the End Session button stays visible
-        const endSessionButton = document.getElementById("end-session-btn");
-        endSessionButton.style.display = "block";
-      }
+      }                     
     </script>
     
     

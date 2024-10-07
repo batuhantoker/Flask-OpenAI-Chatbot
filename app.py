@@ -230,7 +230,6 @@ def get_response(userText):
 
 # Modify the chatbot route to pass email data to the template
 @application.route("/chatbot")
-@application.route("/chatbot")
 def chatbot():
     # Ensure user is logged in and has a valid session token
     if 'user_id' not in session or 'session_token' not in session:
