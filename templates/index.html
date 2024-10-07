@@ -112,58 +112,6 @@
     End Session
   </button>
 
-
-    <!-- Email View (shown when the "View Email" button is clicked) -->
-  <!--
-  <div
-    id="email"
-    style="
-      position: relative; /* Ensure positioning of child elements is within this container */
-      display: none;
-      padding: 20px;
-      border: 1px solid #d1d1d1;
-      border-radius: 10px;
-      background-color: #ffffff;
-      width: 80%;
-      margin: 20px auto;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    "
-    >
-    <button
-      id="copy-button"
-      class="btn btn-secondary"
-      onclick="copyToClipboard()"
-      style="
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        display: flex;
-        align-items: center;
-        background-color: grey;
-        color: white;
-      "
-    >
-      <i class="fa-solid fa-copy" style="margin-right: 5px;"></i> Copy
-    </button>
-
-    <h3 style="font-weight: bold; font-size: 1.5rem;">Email Sender:</h3>
-    <p id="emailSender" style="font-size: 1.25rem; margin-left: 10px;">{{ email_sender }}</p>
-
-    <h3 style="font-weight: bold; font-size: 1.5rem; margin-top: 20px;">Email Subject:</h3>
-    <p id="emailSubject" style="font-size: 1.25rem; margin-left: 10px;">{{ email_subject }}</p>
-
-    <h3 style="font-weight: bold; font-size: 1.5rem; margin-top: 20px;">Email Content:</h3>
-    <p id="emailBody" style="font-size: 1.25rem; margin-left: 10px;">{{ email_content }}</p>
-  </div>
-  -->
-
-  <!-- Email View (shown when the "View Email" button is clicked) -->
-  <!-- Email View (shown when the "View Email" button is clicked) -->
-  <!-- Gmail Email View -->
-  <!-- Email View (Initially hidden) -->
-  <!-- Gmail Email View (Updated to match Gmail UI) -->
-  <!-- Gmail Full Email View with Sidebar, Header, and Email Content -->
-  <!-- Gmail Email View in a Contained Box -->
   <!-- Gmail Email View in a Contained Box -->
   <div id="gmail-ui" class="gmail-ui-container" style="display: none;">
     <!-- Gmail Header -->
@@ -220,10 +168,6 @@
   </div>
 
 
-
-
-
-
     <!-- Styles for Improved UI/UX -->
     <style>
       .email-container {
@@ -254,19 +198,19 @@
     <!-- JavaScript for Copy Functionality -->
     <script>
       // Add event listeners to the buttons
-      document.querySelector('.gmail-reply-btn').addEventListener('click', () => {
-        alert('Reply functionality to be implemented.');
+      document.querySelector('.gmail-reply-btn').addEventListener('click', (event) => {
+        event.preventDefault(); // Prevent any default action
       });
-
-      document.querySelector('.gmail-reply-all-btn').addEventListener('click', () => {
-        alert('Reply All functionality to be implemented.');
+    
+      document.querySelector('.gmail-reply-all-btn').addEventListener('click', (event) => {
+        event.preventDefault(); // Prevent any default action
       });
-
-      document.querySelector('.gmail-forward-btn').addEventListener('click', () => {
-        alert('Forward functionality to be implemented.');
+    
+      document.querySelector('.gmail-forward-btn').addEventListener('click', (event) => {
+        event.preventDefault(); // Prevent any default action
       });
-   
     </script>
+    
 
 
 
