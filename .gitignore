@@ -3,5 +3,6 @@ logs/
 robot_avatar_links.txt
 used_ids.json
 myenv
+.venv
 __pycache__
 .DS_Store
