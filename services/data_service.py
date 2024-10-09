@@ -1,5 +1,6 @@
 from data_classes.users import User
 from data_classes.conversation import Conversation
+from data_classes.survey import SurveyResponse
 import datetime
 import pandas as pd
 import numpy as np
@@ -70,3 +71,7 @@ def getEmailRecordByUuid(uuid: str) -> pd.core.frame.DataFrame:
     single_record = df[df["UniqueID"]==uuid]
 
     return single_record
+
+
+def store_survey_response(user_id, responses):
+    SurveyResponse(user_id=user_id, responses=responses).save()

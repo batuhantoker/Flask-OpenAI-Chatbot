@@ -15,6 +15,7 @@ import data_classes.mongo_setup as mongo_setup
 import services.data_service as svc
 from services.create_accounts_in_db import run_create_accounts
 # from apscheduler.schedulers.background import BackgroundScheduler
+from data_classes.survey import SurveyResponse
 
 
 # Connect with Mongo DB
@@ -346,17 +347,62 @@ def save_user_session_data():
 # time is over.
 @application.route("/end-session")
 def end_session():
-    flash('Your session has expired due to inactivity. Please log in again.')
-    # Perform necessary cleanup, like saving session data
-    save_user_session_data()
-    # Clear the session
-    session.clear()
-    # Redirect to the login page
-    # TODO Redirect to a logout page instead. 
-    # maybe with instructions on how to ask for extra time
-    # if needed
-    return redirect(url_for('login'))
+    # flash('Your session has expired due to inactivity. Please log in again.')
+    # # Perform necessary cleanup, like saving session data
+    # save_user_session_data()
+    # # Clear the session
+    # session.clear()
+    # # Redirect to the login page
+    # # TODO Redirect to a logout page instead. 
+    # # maybe with instructions on how to ask for extra time
+    # # if needed
+    # return redirect(url_for('login'))
+    
+    # Integrate Survey Collection After Session Ends
+    user_id = session.get('user_id')
 
+    if user_id:
+        # Save user session data
+        save_user_session_data()
+
+        # Store user_id temporarily to link with survey
+        session['temp_user_id'] = user_id
+
+    # Clear the session except for temp_user_id
+    temp_user_id = session.get('temp_user_id')
+    session.clear()
+    session['temp_user_id'] = temp_user_id
+
+    # Redirect to survey page
+    return redirect(url_for('survey', user_id=temp_user_id))
+
+@application.route("/survey", methods=['GET', 'POST'])
+def survey():
+    # Retrieve user_id stored temporarily
+    user_id = session.get('temp_user_id') or request.args.get('user_id')
+
+    if not user_id:
+        flash("User session has expired. Please log in again.")
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        # Retrieve survey responses from the form
+        survey_response = request.form.to_dict()
+
+        # Handle multiple checkbox selections for 'features'
+        survey_response['features'] = request.form.getlist('features')
+
+        # Save the survey response to the database
+        SurveyResponse(
+            user_id=user_id,
+            responses=survey_response,
+            timestamp=datetime.datetime.now()
+        ).save()
+
+        flash("Survey responses saved successfully. Thank you!")
+        return redirect(url_for('login'))
+
+    return render_template('survey.html')  # Create a survey.html template for the survey page
 
 
 # Register the save_user_session_data function to be called when the program exits
