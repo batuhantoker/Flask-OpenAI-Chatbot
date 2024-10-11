@@ -44,20 +44,20 @@ align-items: center;
 gap: 2rem;
 }
 
+
+/* Chat Window */
 .chat_window {
-position: absolute;
-width: calc(100% - 20px);
-max-width: 800px;
-height: 500px;
-border-radius: 10px;
-background-color: #fff;
-left: 50%;
-top: 50%;
-transform: translateX(-50%) translateY(-50%);
-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-background-color: #fff;
-overflow: hidden;
+  position: fixed;
+  bottom: 10px; /* Space from the bottom */
+  right: 10px;  /* Space from the right */
+  width: 400px; /* Slightly smaller width */
+  height: 500px; /* Full height */
+  background-color: white;
+  z-index: 100; /* Above the Gmail UI */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 }
+
 
 
 
@@ -477,17 +477,21 @@ text-align: center;
 /* Containing the Gmail UI in a Box */
 /* Gmail Top Bar (Keep Inside Container) */
 .gmail-ui-container {
-  position: relative; /* Ensure the top bar stays within this container */
-  width: 900px;
-  margin: 20px auto;
-  padding: 20px;
+  position: fixed;
+  top: 70px; /* Below the disclaimer */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 100%;
   background-color: #ffffff;
   border: 1px solid #e0e0e0;
   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   font-family: Arial, sans-serif;
-  overflow: hidden;
+  overflow: auto; /* Allow scrolling if content exceeds window */
 }
+
 
 /* Gmail Top Bar (Position Relative to Container) */
 .gmail-top-bar {
@@ -640,9 +644,49 @@ text-align: center;
   color: #202124;
   padding: 5px 10px;
   border-radius: 5px;
+  /* new */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+/*  */
+.gmail-reply-options button img {
+  width: 20px;
+  height: 20px;
+}
+/*  */
+.gmail-reply-options button:hover {
+  background-color: #e0e0e0;
+}
+
+/* NEW STUFF */
+.gmail-icons-left, .gmail-top-icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.gmail-icon {
+  width: 24px;
+  height: 24px;
   cursor: pointer;
 }
 
-.gmail-reply-options button:hover {
-  background-color: #e0e0e0;
+.gmail-icons-left {
+  justify-content: flex-start;
+}
+
+.gmail-top-icons {
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+/* end */
+/* Relocate the End Session button to the top left */
+#end-session-btn {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 3; /* Make sure it's on top of everything else */
 }

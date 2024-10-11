@@ -15,6 +15,8 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
       rel="stylesheet"
     >
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&display=swap" rel="stylesheet">
+
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   </head>
@@ -49,14 +51,17 @@
       {{TIMER_LIMIT|timer_format}}
     </p>
 
+     
     <!-- Add tab buttons @girma_terfa -->
+     <!-- 
     <div class="container" style="margin-bottom: 20px; text-align: center">
       <button class="btn btn-info" onclick="showTab('chat')">Chat</button>
       <button class="btn btn-info" onclick="showTab('email')">
         View Email
       </button>
     </div>
-
+    -->
+  
     <!-- Chat Window -->
     <div id="chat" class="chat_window">
       <div class="top_menu">
@@ -104,16 +109,17 @@
     </div>
 
     <!-- End Session Button -->
-  <button
-    id="end-session-btn"      
-    class="btn btn-danger"
-    style="position: fixed; bottom: 10px; right: 10px"
-  >
-    End Session
-  </button>
+    <!-- End Session Button (now positioned on top left) -->
+    <button
+      id="end-session-btn"      
+      class="btn btn-danger"
+      style="position: fixed; top: 10px; left: 10px"
+    >
+      End Session
+    </button>
 
   <!-- Gmail Email View in a Contained Box -->
-  <div id="gmail-ui" class="gmail-ui-container" style="display: none;">
+  <div id="gmail-ui" class="gmail-ui-container" style="display: block;">
     <!-- Gmail Header -->
     <div class="gmail-top-bar">
       <div class="gmail-logo">
@@ -138,6 +144,17 @@
         <li><a href="#"><i class="fa fa-file"></i> Drafts</a></li>
       </ul>
     </div>
+
+    <!--ADDED ICONS-->
+    <div class="gmail-icons-left">
+      <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/archive_24dp.png" class="gmail-icon">
+      <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/report_24dp.png" class="gmail-icon">
+      <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/delete_24dp.png" class="gmail-icon">
+      <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/mark_as_unread_24dp.png" class="gmail-icon">
+      <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/move_to_24dp.png" class="gmail-icon">
+      <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/label_24dp.png" class="gmail-icon">
+    </div>
+    
 
     <!-- Gmail Content -->
     <div class="gmail-content">
@@ -223,15 +240,18 @@
     <!-- JavaScript to Switch Between Tabs @girma_terfa -->
     <script>
       function showTab(tabId) {
+        // Initially hide both chat and email
         document.getElementById('chat').style.display = 'none';
-        document.getElementById('gmail-ui').style.display = 'none'; // Hide Gmail UI
+        document.getElementById('gmail-ui').style.display = 'none';
       
+        // Display the correct tab based on the button clicked
         if (tabId === 'chat') {
-          document.getElementById('chat').style.display = 'block';
+          document.getElementById('chat').style.display = 'block'; // Show chat
         } else if (tabId === 'email') {
-          document.getElementById('gmail-ui').style.display = 'block'; // Show Gmail UI in container
+          document.getElementById('gmail-ui').style.display = 'block'; // Show email
         }
-      }                     
+      }
+                           
     </script>
     
     
