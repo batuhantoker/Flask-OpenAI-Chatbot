@@ -113,6 +113,12 @@
       window.location.href = "/end-session"; // This should match the logic for session termination
     }
 
+    //Search Bar
+    document.querySelector('.gmail-search-bar').addEventListener('focus', function(event) {
+      event.preventDefault(); // Prevent focus
+    });
+    
+
     // Attach event listener to the "End Session" button
     document
       .getElementById("end-session-btn")

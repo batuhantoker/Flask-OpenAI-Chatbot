@@ -62,7 +62,7 @@ gap: 2rem;
 
 
 .top_menu {
-background-color: #fff;
+background-color: #4a8bad;
 width: 100%;
 padding: 20px 0 15px;
 box-shadow: 0 1px 30px rgba(0, 0, 0, 0.1);
@@ -90,7 +90,7 @@ background-color: #a3d063;
 }
 .top_menu .title {
 text-align: center;
-color: #1b1b1b;
+color: #ffffff;
 font-size: 20px;
 }
 
@@ -542,6 +542,7 @@ text-align: center;
   padding: 8px;
   border-radius: 20px;
   border: none;
+  pointer-events: none; /* Disable interaction */
 }
 
 .gmail-top-icons {
@@ -549,12 +550,12 @@ text-align: center;
   align-items: center;
 }
 
-/* Gmail Profile Icon (User Icon Light Blue) */
+/* Gmail Profile Icon (User Icon) */
 .gmail-profile-icon {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color: #87ceeb; /* Light blue background */
+  background-color: #6fa287; /* user icon color*/
 }
 
 
