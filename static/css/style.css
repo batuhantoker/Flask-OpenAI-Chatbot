@@ -475,7 +475,9 @@ text-align: center;
 /* GOOGLE */
 /* Gmail UI General Styles */
 /* Containing the Gmail UI in a Box */
+/* Gmail Top Bar (Keep Inside Container) */
 .gmail-ui-container {
+  position: relative; /* Ensure the top bar stays within this container */
   width: 900px;
   margin: 20px auto;
   padding: 20px;
@@ -484,88 +486,46 @@ text-align: center;
   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   font-family: Arial, sans-serif;
-  position: relative;
-  overflow: hidden; /* Ensure the content stays within the box */
-}
-
-/* Light Grey Top Bar Instead of Red */
-.gmail-top-bar {
-  background-color: #d9d9d9; /* Light grey */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  color: white;
-}
-
-.gmail-logo {
-  display: flex;
-  align-items: center;
-}
-
-.gmail-logo-icon {
-  width: 24px;
-  height: 24px;
-  margin-right: 10px;
-}
-
-.gmail-search {
-  flex-grow: 1;
-  margin-left: 20px;
-}
-
-.gmail-search-bar {
-  width: 50%;
-  padding: 8px;
-  border-radius: 20px;
-  border: none;
-}
-
-.gmail-top-icons {
-  display: flex;
-  align-items: center;
-}
-
-.gmail-profile-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-}
-
-/* Gmail Sidebar */
-/* Containing the Gmail UI in a Box */
-.gmail-ui-container {
-  width: 900px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
-  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  font-family: Arial, sans-serif;
-  position: relative;
   overflow: hidden;
 }
 
-/* Light Grey Top Bar Instead of Red */
+/* Gmail Top Bar (Position Relative to Container) */
 .gmail-top-bar {
-  background-color: #d9d9d9; /* Light grey */
+  background-color: #f1f3f4;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
   color: white;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%; 
+  z-index: 2; /* Ensure it stays above content within the container */
 }
 
+
+
+/* Gmail Logo (Increase Icon and Text Size) */
 .gmail-logo {
   display: flex;
   align-items: center;
+  font-size: 24px; /* Increase size of the Gmail text */
+  color: #202124; /* Deep dark grey color for better contrast */
 }
 
 .gmail-logo-icon {
-  width: 24px;
-  height: 24px;
+  width: 32px; /* Make the Gmail icon larger */
+  height: 32px;
   margin-right: 10px;
+}
+
+
+/* Adjusting Gmail Text Color for Contrast */
+.gmail-logo-text {
+  font-size: 20px;
+  color: #202124; /* Dark grey for better contrast */
+  font-weight: bold;
 }
 
 .gmail-search {
@@ -585,23 +545,26 @@ text-align: center;
   align-items: center;
 }
 
+/* Gmail Profile Icon (User Icon Light Blue) */
 .gmail-profile-icon {
   width: 36px;
   height: 36px;
   border-radius: 50%;
+  background-color: #87ceeb; /* Light blue background */
 }
 
-/* Gmail Sidebar (No Overlapping) */
+
+/* Gmail Sidebar (Position Fix to Ensure No Overlap with Top Bar) */
 .gmail-sidebar {
   width: 180px;
   background-color: #f1f3f4;
   padding: 20px;
   position: absolute;
-  top: 60px;
+  top: 60px; /* Ensure it starts below the top bar */
   left: 0;
-  height: calc(100% - 60px);
+  height: calc(100% - 60px); /* Ensure the height is calculated to fit under the top bar */
   box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.1);
-  z-index: 10; /* Ensure it stays behind the top bar */
+  z-index: 1; /* Make sure it's below the top bar */
 }
 
 .gmail-sidebar ul {
@@ -630,6 +593,8 @@ text-align: center;
 .gmail-content {
   margin-left: 220px; /* Adjusted for the sidebar */
   padding: 80px 40px 40px 40px;
+  position: relative;
+  z-index: 1; /* Content should appear under the top bar and sidebar */
 }
 
 .gmail-email-header h2 {
@@ -680,39 +645,4 @@ text-align: center;
 
 .gmail-reply-options button:hover {
   background-color: #e0e0e0;
-}
-
-/* Gmail Sidebar (Position Fix to Ensure No Overlap with Top Bar) */
-.gmail-sidebar {
-  width: 180px;
-  background-color: #f1f3f4;
-  padding: 20px;
-  position: absolute;
-  top: 60px; /* Ensure it starts below the top bar */
-  left: 0;
-  height: calc(100% - 60px); /* Ensure the height is calculated to fit under the top bar */
-  box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.1);
-  z-index: 1; /* Make sure it's below the top bar */
-}
-
-.gmail-top-bar {
-  background-color: #d9d9d9; /* Light grey top bar */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  color: white;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 2; /* Top bar should always stay above the sidebar */
-}
-
-/* Gmail Content (Still Adjusted to the Right to Avoid Sidebar Overlap) */
-.gmail-content {
-  margin-left: 220px; /* Adjusted for the sidebar */
-  padding: 80px 40px 40px 40px;
-  position: relative;
-  z-index: 1; /* Content should appear under the top bar and sidebar */
 }
