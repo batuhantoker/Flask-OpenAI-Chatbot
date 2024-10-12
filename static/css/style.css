@@ -473,9 +473,6 @@ text-align: center;
 }
 
 /* GOOGLE */
-/* Gmail UI General Styles */
-/* Containing the Gmail UI in a Box */
-/* Gmail Top Bar (Keep Inside Container) */
 .gmail-ui-container {
   position: fixed;
   top: 70px; /* Below the disclaimer */
