@@ -16,6 +16,8 @@ class User(mongoengine.Document):
     
     # New field for survey responses
     survey_responses = mongoengine.DictField()
+    
+    survey_completed = mongoengine.BooleanField(default=False)
 
 
     meta = {

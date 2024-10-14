@@ -100,17 +100,16 @@ def initialize_user_data(user_id):
 def session_timeout():
     # Check if the session has a start time
     if 'start_time' in session:
-        # Get the current time and the time when the session started
         current_time = datetime.datetime.now(datetime.timezone.utc)
         start_time = session['start_time']
         
-        # Calculate the elapsed time in seconds
         elapsed_time = math.floor((current_time - start_time).total_seconds())
-        
-        # If more than 5 minutes (300 seconds) have passed, end the session
+
+        # If the timer limit has been exceeded, end the session and redirect
         if elapsed_time > TIMER_LIMIT:
             return redirect(url_for('end_session'))
-    return None  # Return None if the session is still valid
+    
+    return None
     
 
 
@@ -134,19 +133,22 @@ def login():
             
             # Assuming, as soon as logged in, we start the timer (after disclaimer).
             
-            # Check if already logged in:
-            if existing_user.timer_is_running:
-                start_time = existing_user.start_time
-                # Check if start_time is naive (i.e., has no timezone info) 
-                # (Usually while reading it looses tzinfo)
-                if start_time.tzinfo is None:
-                    start_time = start_time.replace(tzinfo=datetime.timezone.utc)  
-            else:
-                start_time = svc.start_timer_by_User(existing_user)
+            # If survey is completed, the user should not be allowed to login again
+            if existing_user.survey_completed:
+                flash('Survey already completed. You cannot login again.')
+                return redirect(url_for('login'))
             
-            # Check if conversation history exists, if not create with inital message
-            if existing_user.conversation_history == []:
-                svc.append_conversation(user_id, is_bot=True, content=initial_message+user_id)
+            # Check if the timer is running; if not, start it
+            if not existing_user.timer_is_running:
+                start_time = svc.start_timer_by_User(existing_user)
+            else:
+                start_time = existing_user.start_time
+                if start_time.tzinfo is None:
+                    start_time = start_time.replace(tzinfo=datetime.timezone.utc)
+            
+            # If no conversation history, initiate with a welcome message
+            if not existing_user.conversation_history:
+                svc.append_conversation(user_id, is_bot=True, content=initial_message + user_id)
             
 
             # Mark the user ID as "in use" immediately upon login
@@ -346,23 +348,20 @@ def save_user_session_data():
 # time is over.
 @application.route("/end-session")
 def end_session():
-    # flash('Your session has expired due to inactivity. Please log in again.')
-    # # Perform necessary cleanup, like saving session data
-    # save_user_session_data()
-    # # Clear the session
-    # session.clear()
-    # # Redirect to the login page
-    # # TODO Redirect to a logout page instead. 
-    # # maybe with instructions on how to ask for extra time
-    # # if needed
-    # return redirect(url_for('login'))
-    
     # Integrate Survey Collection After Session Ends
     user_id = session.get('user_id')
 
     if user_id:
         # Save user session data
         save_user_session_data()
+        
+        # Fetch the user record
+        user = svc.find_account_by_user_id(user_id)
+        if user:
+            # Only reset survey_completed if the survey hasn't been completed
+            if not user.survey_completed:
+                user.timer_is_running = False  # Stop the timer
+                user.save()
 
         # Store user_id temporarily to link with survey
         session['temp_user_id'] = user_id
@@ -375,32 +374,33 @@ def end_session():
     # Redirect to survey page
     return redirect(url_for('survey', user_id=temp_user_id))
 
+
 @application.route("/survey", methods=['GET', 'POST'])
 def survey():
-    # Retrieve user_id stored temporarily
     user_id = session.get('temp_user_id') or request.args.get('user_id')
 
     if not user_id:
-        flash("User session has expired. Please log in again.")
+        flash("Session has expired. Please log in again.")
         return redirect(url_for('login'))
 
     if request.method == 'POST':
         # Retrieve survey responses from the form
         survey_response = request.form.to_dict()
-
-        # Handle multiple checkbox selections for 'features'
         survey_response['features'] = request.form.getlist('features')
 
         # Find the user and update survey responses
         user = svc.find_account_by_user_id(user_id)
         if user:
             user.survey_responses = survey_response
+            user.survey_completed = True  # Mark survey as completed
+            user.timer_is_running = False  # Ensure the timer is stopped
             user.save()
 
-        flash("Survey responses saved successfully. Thank you!")
+        flash("Survey responses saved successfully. Session ended.")
+        session.clear()  # Clear the session fully after survey is completed
         return redirect(url_for('login'))
 
-    return render_template('survey.html')  # Create a survey.html template for the survey page
+    return render_template('survey.html')
 
 
 
