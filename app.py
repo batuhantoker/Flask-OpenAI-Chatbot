@@ -391,17 +391,17 @@ def survey():
         # Handle multiple checkbox selections for 'features'
         survey_response['features'] = request.form.getlist('features')
 
-        # Save the survey response to the database
-        SurveyResponse(
-            user_id=user_id,
-            responses=survey_response,
-            timestamp=datetime.datetime.now()
-        ).save()
+        # Find the user and update survey responses
+        user = svc.find_account_by_user_id(user_id)
+        if user:
+            user.survey_responses = survey_response
+            user.save()
 
         flash("Survey responses saved successfully. Thank you!")
         return redirect(url_for('login'))
 
     return render_template('survey.html')  # Create a survey.html template for the survey page
+
 
 
 # Register the save_user_session_data function to be called when the program exits
