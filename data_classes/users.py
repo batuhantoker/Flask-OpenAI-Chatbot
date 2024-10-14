@@ -13,6 +13,11 @@ class User(mongoengine.Document):
     start_time = mongoengine.DateTimeField(default=datetime.datetime.now)
 
     conversation_history = mongoengine.EmbeddedDocumentListField(Conversation)
+    
+    # New field for survey responses
+    survey_responses = mongoengine.DictField()
+    
+    survey_completed = mongoengine.BooleanField(default=False)
 
 
     meta = {
