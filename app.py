@@ -139,12 +139,12 @@ def login():
                 return redirect(url_for('login'))
             
             # Check if the timer is running; if not, start it
-            if not existing_user.timer_is_running:
-                start_time = svc.start_timer_by_User(existing_user)
-            else:
-                start_time = existing_user.start_time
-                if start_time.tzinfo is None:
-                    start_time = start_time.replace(tzinfo=datetime.timezone.utc)
+            # if not existing_user.timer_is_running:
+            #     start_time = svc.start_timer_by_User(existing_user)
+            start_time = existing_user.start_time
+            if start_time.tzinfo is None:
+                start_time = start_time.replace(tzinfo=datetime.timezone.utc)
+                
             
             # If no conversation history, initiate with a welcome message
             if not existing_user.conversation_history:
@@ -167,7 +167,7 @@ def login():
             # TODO Can drop json and csv file. No longer needed.
             
             # Redirect to the chatbot page
-            return redirect(url_for('chatbot'))
+            return redirect(url_for('consent'))
         else:
             # Invalid user ID or ID has already been used or is in use, show an error message
             flash('Invalid, already used, or in-use User ID! Please try again.')
@@ -401,6 +401,66 @@ def survey():
         return redirect(url_for('login'))
 
     return render_template('survey.html')
+
+
+
+@application.route("/consent", methods=['GET', 'POST'])
+def consent():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))  # Ensure the user is logged in
+    
+    if request.method == 'POST':
+        consent_given = request.form.get('consent')
+        
+        if consent_given != 'yes':
+            flash("You must give consent to proceed.")
+            return redirect(url_for('consent'))
+        
+        # Proceed to pre-survey after consent is given
+        return redirect(url_for('pre_survey'))
+
+    return render_template('consent.html')  # Ensure you create this template
+
+
+
+@application.route("/pre-survey", methods=['GET', 'POST'])
+def pre_survey():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        # Save pre-survey responses to DB
+        pre_survey_responses = request.form.to_dict()
+        pre_survey_responses['features'] = request.form.getlist('features')
+        
+        # Save pre-survey responses in the user's document
+        svc.store_survey_response(session['user_id'], pre_survey_responses, is_pre_survey=True)
+        
+        # Redirect to instructions page
+        return redirect(url_for('instructions'))
+
+    return render_template('pre_survey.html')
+
+
+
+@application.route("/instructions", methods=['GET'])
+def instructions():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    return render_template('instructions.html')
+
+
+
+@application.route("/start-timer", methods=['POST'])
+def start_timer():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    # Start the timer only when the "Next" button is clicked on the instructions page
+    svc.start_timer_by_User(svc.find_account_by_user_id(session['user_id']))
+
+    # Redirect to chatbot
+    return redirect(url_for('chatbot'))
 
 
 

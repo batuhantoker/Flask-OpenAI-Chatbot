@@ -17,6 +17,8 @@ class User(mongoengine.Document):
     # New field for survey responses
     survey_responses = mongoengine.DictField()
     
+    pre_survey_responses = mongoengine.DictField()  # New field for pre-survey
+    
     survey_completed = mongoengine.BooleanField(default=False)
 
 
