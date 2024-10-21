@@ -88,6 +88,7 @@
     // Monitoring if Enter button is pressed
     $(".message_input").keyup(function (e) {
       if (e.which === 13) {
+        e.preventDefault(); 
         return sendMessage(getMessageText());
       }
     });
@@ -202,3 +203,18 @@ $(function () {
     form.addClass("was-validated");
   });
 });
+
+function toggleChat() {
+  var chatWindow = document.getElementById("chat");
+
+  // Check if the chat is currently collapsed or expanded
+  if (chatWindow.classList.contains("collapsed")) {
+      // Expand the chat window
+      chatWindow.classList.remove("collapsed");
+      chatWindow.classList.add("expanded");
+  } else {
+      // Collapse the chat window
+      chatWindow.classList.remove("expanded");
+      chatWindow.classList.add("collapsed");
+  }
+}

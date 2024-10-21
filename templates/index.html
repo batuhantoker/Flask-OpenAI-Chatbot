@@ -62,54 +62,64 @@
       </button>
     </div>
     -->
-  
+    {% comment %} add this two line at the start and end of the chat window
+    {% if user_id_int % 2 == 1 %} 
+    {% endif %} 
+    {% endcomment %}
     <!-- Chat Window -->
-    {% if user_id_int % 2 == 1 %}
-        <div id="chat" class="chat_window">
-        <div class="top_menu">
-            <div class="title">Hi, Your User Id is: {{userId}}</div>
-        </div>
-        <ul class="messages">
-            {% for convo in convo_history %}
-            <li class="message {{convo.is_bot|message_side_format}} appeared">
-            <div class="avatar"></div>
-            <div class="text_wrapper">
-                <div class="text">{{convo.content}}</div>
-            </div>
-            </li>
-            {% endfor %}
-        </ul>
-        <div class="bottom_wrapper clearfix">
-            <div class="message_input_wrapper">
-            <input
-                class="message_input"
-                placeholder="Type your message here..."
-            />
-            </div>
+<div id="chat" class="chat_window">
+  <div class="top_menu" onclick="toggleChat()"> <!-- Add an onclick event -->
+    <div class="title">Hi, Your User Id is: {{userId}}</div>
+  </div>
 
-            <div class="send_message">
-            <div class="icon">
-                <img
-                src="{{ url_for('static', filename='images/logos/send_icon.svg') }}"
-                alt="Send Icon"
-                />
-            </div>
-            <div class="text">
-                <b><strong>Send</strong></b>
-            </div>
-            </div>
+  <div id="chatContent"> <!-- Wrap the chat content for toggling -->
+    <ul class="messages">
+      {% for convo in convo_history %}
+      <li class="message {{convo.is_bot|message_side_format}} appeared">
+        <div class="avatar"></div>
+        <div class="text_wrapper">
+          <div class="text">{{convo.content}}</div>
         </div>
+      </li>
+      {% endfor %}
+    </ul>
+    <div class="bottom_wrapper clearfix">
+      <div class="message_input_wrapper">
+        <input class="message_input" placeholder="Type your message here..." />
+      </div>
+      <div class="send_message">
+        <div class="icon">
+          <img
+            src="{{ url_for('static', filename='images/logos/send_icon.svg') }}"
+            alt="Send Icon"
+          />
+        </div>
+        <div class="text">
+          <b><strong>Send</strong></b>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="message_template">
-            <li class="message">
-            <div class="avatar"></div>
-            <div class="text_wrapper">
-                <div class="text"></div>
-            </div>
-            </li>
-        </div>
-        </div>
-    {% endif %}
+  <div class="message_template">
+    <li class="message">
+      <div class="avatar"></div>
+      <div class="text_wrapper">
+        <div class="text"></div>
+      </div>
+    </li>
+  </div>
+</div>
+
+    <!-- End Session Button -->
+    <!-- End Session Button (now positioned on top left) -->
+    <button
+      id="end-session-btn"      
+      class="btn btn-danger"
+      style="position: fixed; top: 10px; left: 10px"
+    >
+      End Session
+    </button>
 
   <!-- Gmail Email View in a Contained Box -->
   <div id="gmail-ui" class="gmail-ui-container" style="display: block;">
