@@ -220,6 +220,10 @@ def chat(user_input):
     # Save the conversation history in the session
     session['chat_history'] = conversation_history
     
+    # Ensure the user_sessions entry exists
+    if session['user_id'] not in user_sessions:
+        user_sessions[session['user_id']] = {}
+
     # Update the global user_sessions dictionary
     user_sessions[session['user_id']]['chat_history'] = conversation_history
     
