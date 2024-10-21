@@ -38,19 +38,19 @@
         private.
       </p>
     </div>
-    <p
-      style="
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-weight: bold;
-        font-size: 2rem;
-      "
-      id="timer"
-    >
-      {{TIMER_LIMIT|timer_format}}
-    </p>
-
+    
+    <div class="session-info">
+        <!-- End Session Button -->
+        <button id="end-session-btn" class="btn btn-success">
+            Proceed To Survey
+        </button>
+        
+        {# Timer #}
+        <p id="timer" style="font-weight: bold; font-size: 2rem;">
+            {{TIMER_LIMIT|timer_format}}
+        </p>
+    
+    </div>
      
     <!-- Add tab buttons @girma_terfa -->
      <!-- 
@@ -107,16 +107,6 @@
         </li>
       </div>
     </div>
-
-    <!-- End Session Button -->
-    <!-- End Session Button (now positioned on top left) -->
-    <button
-      id="end-session-btn"      
-      class="btn btn-danger"
-      style="position: fixed; top: 10px; left: 10px"
-    >
-      End Session
-    </button>
 
   <!-- Gmail Email View in a Contained Box -->
   <div id="gmail-ui" class="gmail-ui-container" style="display: block;">
