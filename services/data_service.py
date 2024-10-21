@@ -23,12 +23,12 @@ def find_account_by_user_id(user_id: str) -> User:
 
 
 def start_timer_by_User(existing_user: User) -> datetime.datetime:
+    # Reset the start time to now, only when the timer is triggered by clicking "Next"
     start_time = datetime.datetime.now(datetime.timezone.utc)
     existing_user.start_time = start_time
     existing_user.timer_is_running = True
-
     existing_user.save()
-    
+
     return start_time
 
 

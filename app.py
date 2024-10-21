@@ -161,7 +161,7 @@ def login():
             session['user_id'] = user_id
             session["email_id"] = existing_user.email_id
             session['user_dir'], session['csv_file'] = initialize_user_data(user_id)   # returns paths 
-            session['start_time'] = start_time  # Initialize start time when session begins
+            # session['start_time'] = start_time  # Initialize start time when session begins
             session['chat_history'] = []  # Initialize chat history in session
             # TODO Known ISSUE new device would again activate login function, making all the session variables blank. Need to use DB to make it consistent!
             # TODO Can drop json and csv file. No longer needed.
@@ -236,16 +236,30 @@ def get_response(userText):
 def chatbot():
     # Ensure user is logged in and has a valid session token
     if 'user_id' not in session or 'session_token' not in session:
-        return redirect(url_for('login'))  # If not logged in, redirect to login page
+        return redirect(url_for('login'))
 
     # Checking if the session has expired
     timeout_redirect = session_timeout()
     if timeout_redirect:
         return timeout_redirect  # If session has timed out, redirect to login
-    
-    end_time = session['start_time'] + datetime.timedelta(seconds=TIMER_LIMIT)
+
+    # Fetch the user's start_time and ensure it's timezone-aware
+    existing_user = svc.find_account_by_user_id(session['user_id'])
+    start_time = existing_user.start_time
+
+    # Ensure start_time is timezone-aware
+    if start_time.tzinfo is None:
+        start_time = start_time.replace(tzinfo=datetime.timezone.utc)
+
+    # Make current_time timezone-aware
     current_time = datetime.datetime.now(datetime.timezone.utc)
-    time_left = math.ceil((end_time - current_time).total_seconds())
+
+    # Calculate remaining time only after the timer has started
+    if existing_user.timer_is_running:
+        end_time = start_time + datetime.timedelta(seconds=TIMER_LIMIT)
+        time_left = max(0, math.ceil((end_time - current_time).total_seconds()))
+    else:
+        time_left = TIMER_LIMIT  # If the timer hasn't started, show full time
 
     # Fetch a random email to display
     email = svc.getEmailRecordByUuid(session["email_id"])
@@ -253,16 +267,6 @@ def chatbot():
     email_sender = email["From"].values[0]
     email_subject = email["Subject"].values[0]
     email_content = email["Email Content"].values[0]
-
-    # Save session data to global user_sessions dictionary
-    user_sessions[session['user_id']] = {
-        'start_time': session['start_time'],
-        'user_dir': session['user_dir'],
-        'chat_history': session['chat_history'],
-        'session_token': session['session_token'],
-    }
-
-    existing_user = svc.find_account_by_user_id(session['user_id'])
 
     return render_template(
         "index.html", 
@@ -272,7 +276,7 @@ def chatbot():
         email_subject=email_subject,
         email_content=email_content,
         convo_history=existing_user.conversation_history
-    ) # Pass the userId, timer, and email data to the frontend
+    )
 
 #######################################################
 
