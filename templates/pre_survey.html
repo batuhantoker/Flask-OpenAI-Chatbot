@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f8;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        p {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        input[type="radio"],
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .multiple-choice-group,
+        .likert-scale-group,
+        .rating-group {
+            margin-bottom: 20px;
+        }
+        .submit-btn {
+            display: flex;
+            justify-content: center;
+        }
+        .likert-scale-group table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .likert-scale-group th,
+        .likert-scale-group td {
+            text-align: center;
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Session Ended - We Value Your Feedback</h1>
+        <form method="POST" action="/pre-survey">
+            <!-- Rating Question -->
+            <div class="rating-group">
+                <p><strong>1. How would you rate your experience with the chatbot?</strong></p>
+                <label><input type="radio" name="rating" value="1" required> 1 - Poor</label><br>
+                <label><input type="radio" name="rating" value="2"> 2</label><br>
+                <label><input type="radio" name="rating" value="3"> 3</label><br>
+                <label><input type="radio" name="rating" value="4"> 4</label><br>
+                <label><input type="radio" name="rating" value="5"> 5 - Excellent</label>
+            </div>
+
+            <!-- Multiple Choice Question -->
+            <div class="multiple-choice-group">
+                <p><strong>2. Which features did you find the most useful? (Select all that apply)</strong></p>
+                <label><input type="checkbox" name="features" value="speed"> Speed</label><br>
+                <label><input type="checkbox" name="features" value="accuracy"> Accuracy</label><br>
+                <label><input type="checkbox" name="features" value="ease_of_use"> Ease of Use</label><br>
+                <label><input type="checkbox" name="features" value="interface"> User Interface</label>
+            </div>
+
+            <!-- Single Choice Question -->
+            <div class="single-choice-group">
+                <p><strong>3. How often do you use the chatbot?</strong></p>
+                <label><input type="radio" name="frequency" value="daily" required> Daily</label><br>
+                <label><input type="radio" name="frequency" value="weekly"> Weekly</label><br>
+                <label><input type="radio" name="frequency" value="monthly"> Monthly</label><br>
+                <label><input type="radio" name="frequency" value="rarely"> Rarely</label>
+            </div>
+
+            <!-- Likert Scale Question -->
+            <div class="likert-scale-group">
+                <p><strong>4. Please indicate how much you agree or disagree with the following statements:</strong></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Statement</th>
+                            <th>Strongly Disagree</th>
+                            <th>Disagree</th>
+                            <th>Neutral</th>
+                            <th>Agree</th>
+                            <th>Strongly Agree</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>The chatbot was easy to use.</td>
+                            <td><input type="radio" name="easy_to_use" value="1" required></td>
+                            <td><input type="radio" name="easy_to_use" value="2"></td>
+                            <td><input type="radio" name="easy_to_use" value="3"></td>
+                            <td><input type="radio" name="easy_to_use" value="4"></td>
+                            <td><input type="radio" name="easy_to_use" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>The chatbot provided accurate responses.</td>
+                            <td><input type="radio" name="accurate_responses" value="1" required></td>
+                            <td><input type="radio" name="accurate_responses" value="2"></td>
+                            <td><input type="radio" name="accurate_responses" value="3"></td>
+                            <td><input type="radio" name="accurate_responses" value="4"></td>
+                            <td><input type="radio" name="accurate_responses" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>I would recommend the chatbot to others.</td>
+                            <td><input type="radio" name="recommend" value="1" required></td>
+                            <td><input type="radio" name="recommend" value="2"></td>
+                            <td><input type="radio" name="recommend" value="3"></td>
+                            <td><input type="radio" name="recommend" value="4"></td>
+                            <td><input type="radio" name="recommend" value="5"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Open-Ended Question -->
+            <div class="open-ended-group">
+                <p><strong>5. Any comments or suggestions for improvement?</strong></p>
+                <textarea name="comments" rows="4" placeholder="Enter your comments here..."></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="submit-btn">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

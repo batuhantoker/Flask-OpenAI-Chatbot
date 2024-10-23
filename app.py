@@ -139,12 +139,12 @@ def login():
                 return redirect(url_for('login'))
             
             # Check if the timer is running; if not, start it
-            if not existing_user.timer_is_running:
-                start_time = svc.start_timer_by_User(existing_user)
-            else:
-                start_time = existing_user.start_time
-                if start_time.tzinfo is None:
-                    start_time = start_time.replace(tzinfo=datetime.timezone.utc)
+            # if not existing_user.timer_is_running:
+            #     start_time = svc.start_timer_by_User(existing_user)
+            start_time = existing_user.start_time
+            if start_time.tzinfo is None:
+                start_time = start_time.replace(tzinfo=datetime.timezone.utc)
+                
             
             # If no conversation history, initiate with a welcome message
             if not existing_user.conversation_history:
@@ -161,13 +161,13 @@ def login():
             session['user_id'] = user_id
             session["email_id"] = existing_user.email_id
             session['user_dir'], session['csv_file'] = initialize_user_data(user_id)   # returns paths 
-            session['start_time'] = start_time  # Initialize start time when session begins
+            # session['start_time'] = start_time  # Initialize start time when session begins
             session['chat_history'] = []  # Initialize chat history in session
             # TODO Known ISSUE new device would again activate login function, making all the session variables blank. Need to use DB to make it consistent!
             # TODO Can drop json and csv file. No longer needed.
             
             # Redirect to the chatbot page
-            return redirect(url_for('chatbot'))
+            return redirect(url_for('consent'))
         else:
             # Invalid user ID or ID has already been used or is in use, show an error message
             flash('Invalid, already used, or in-use User ID! Please try again.')
@@ -220,6 +220,10 @@ def chat(user_input):
     # Save the conversation history in the session
     session['chat_history'] = conversation_history
     
+    # Ensure the user_sessions entry exists
+    if session['user_id'] not in user_sessions:
+        user_sessions[session['user_id']] = {}
+
     # Update the global user_sessions dictionary
     user_sessions[session['user_id']]['chat_history'] = conversation_history
     
@@ -236,16 +240,30 @@ def get_response(userText):
 def chatbot():
     # Ensure user is logged in and has a valid session token
     if 'user_id' not in session or 'session_token' not in session:
-        return redirect(url_for('login'))  # If not logged in, redirect to login page
+        return redirect(url_for('login'))
 
     # Checking if the session has expired
     timeout_redirect = session_timeout()
     if timeout_redirect:
         return timeout_redirect  # If session has timed out, redirect to login
-    
-    end_time = session['start_time'] + datetime.timedelta(seconds=TIMER_LIMIT)
+
+    # Fetch the user's start_time and ensure it's timezone-aware
+    existing_user = svc.find_account_by_user_id(session['user_id'])
+    start_time = existing_user.start_time
+
+    # Ensure start_time is timezone-aware
+    if start_time.tzinfo is None:
+        start_time = start_time.replace(tzinfo=datetime.timezone.utc)
+
+    # Make current_time timezone-aware
     current_time = datetime.datetime.now(datetime.timezone.utc)
-    time_left = math.ceil((end_time - current_time).total_seconds())
+
+    # Calculate remaining time only after the timer has started
+    if existing_user.timer_is_running:
+        end_time = start_time + datetime.timedelta(seconds=TIMER_LIMIT)
+        time_left = max(0, math.ceil((end_time - current_time).total_seconds()))
+    else:
+        time_left = TIMER_LIMIT  # If the timer hasn't started, show full time
 
     # Fetch a random email to display
     email = svc.getEmailRecordByUuid(session["email_id"])
@@ -253,16 +271,6 @@ def chatbot():
     email_sender = email["From"].values[0]
     email_subject = email["Subject"].values[0]
     email_content = email["Email Content"].values[0]
-
-    # Save session data to global user_sessions dictionary
-    user_sessions[session['user_id']] = {
-        'start_time': session['start_time'],
-        'user_dir': session['user_dir'],
-        'chat_history': session['chat_history'],
-        'session_token': session['session_token'],
-    }
-
-    existing_user = svc.find_account_by_user_id(session['user_id'])
 
     return render_template(
         "index.html", 
@@ -272,7 +280,7 @@ def chatbot():
         email_subject=email_subject,
         email_content=email_content,
         convo_history=existing_user.conversation_history
-    ) # Pass the userId, timer, and email data to the frontend
+    )
 
 #######################################################
 
@@ -401,6 +409,66 @@ def survey():
         return redirect(url_for('login'))
 
     return render_template('survey.html')
+
+
+
+@application.route("/consent", methods=['GET', 'POST'])
+def consent():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))  # Ensure the user is logged in
+    
+    if request.method == 'POST':
+        consent_given = request.form.get('consent')
+        
+        if consent_given != 'yes':
+            flash("You must give consent to proceed.")
+            return redirect(url_for('consent'))
+        
+        # Proceed to pre-survey after consent is given
+        return redirect(url_for('pre_survey'))
+
+    return render_template('consent.html')  # Ensure you create this template
+
+
+
+@application.route("/pre-survey", methods=['GET', 'POST'])
+def pre_survey():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        # Save pre-survey responses to DB
+        pre_survey_responses = request.form.to_dict()
+        pre_survey_responses['features'] = request.form.getlist('features')
+        
+        # Save pre-survey responses in the user's document
+        svc.store_survey_response(session['user_id'], pre_survey_responses, is_pre_survey=True)
+        
+        # Redirect to instructions page
+        return redirect(url_for('instructions'))
+
+    return render_template('pre_survey.html')
+
+
+
+@application.route("/instructions", methods=['GET'])
+def instructions():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    return render_template('instructions.html')
+
+
+
+@application.route("/start-timer", methods=['POST'])
+def start_timer():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    # Start the timer only when the "Next" button is clicked on the instructions page
+    svc.start_timer_by_User(svc.find_account_by_user_id(session['user_id']))
+
+    # Redirect to chatbot
+    return redirect(url_for('chatbot'))
 
 
 

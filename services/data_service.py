@@ -23,12 +23,12 @@ def find_account_by_user_id(user_id: str) -> User:
 
 
 def start_timer_by_User(existing_user: User) -> datetime.datetime:
+    # Reset the start time to now, only when the timer is triggered by clicking "Next"
     start_time = datetime.datetime.now(datetime.timezone.utc)
     existing_user.start_time = start_time
     existing_user.timer_is_running = True
-
     existing_user.save()
-    
+
     return start_time
 
 
@@ -73,5 +73,16 @@ def getEmailRecordByUuid(uuid: str) -> pd.core.frame.DataFrame:
     return single_record
 
 
-def store_survey_response(user_id, responses):
-    SurveyResponse(user_id=user_id, responses=responses).save()
+def store_survey_response(user_id, responses, is_pre_survey=False):
+    # Find the user document
+    user = find_account_by_user_id(user_id)
+    
+    if user:
+        # If it's the pre-survey, store it separately in the user document
+        if is_pre_survey:
+            user.pre_survey_responses = responses
+        else:
+            # Otherwise, store it as the final survey
+            user.survey_responses = responses
+        
+        user.save()  # Save the updated user document
