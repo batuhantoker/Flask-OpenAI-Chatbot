@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
     <title>Survey</title>
     <style>
         body {
@@ -17,7 +21,7 @@
             align-items: center;
             min-height: 100vh;
         }
-        .container {
+        .survey_div {
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
@@ -48,7 +52,7 @@
             resize: vertical;
             margin-bottom: 20px;
         }
-        button {
+        /*button {
             background-color: #4CAF50;
             color: white;
             padding: 10px 20px;
@@ -59,7 +63,7 @@
         }
         button:hover {
             background-color: #45a049;
-        }
+        }*/
         .multiple-choice-group,
         .likert-scale-group,
         .rating-group {
@@ -81,92 +85,136 @@
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Session Ended - We Value Your Feedback</h1>
-        <form method="POST" action="/survey">
-            <!-- Rating Question -->
-            <div class="rating-group">
-                <p><strong>1. How would you rate your experience with the chatbot?</strong></p>
-                <label><input type="radio" name="rating" value="1" required> 1 - Poor</label><br>
-                <label><input type="radio" name="rating" value="2"> 2</label><br>
-                <label><input type="radio" name="rating" value="3"> 3</label><br>
-                <label><input type="radio" name="rating" value="4"> 4</label><br>
-                <label><input type="radio" name="rating" value="5"> 5 - Excellent</label>
-            </div>
+    <div class="survey_email">
 
-            <!-- Multiple Choice Question -->
-            <div class="multiple-choice-group">
-                <p><strong>2. Which features did you find the most useful? (Select all that apply)</strong></p>
-                <label><input type="checkbox" name="features" value="speed"> Speed</label><br>
-                <label><input type="checkbox" name="features" value="accuracy"> Accuracy</label><br>
-                <label><input type="checkbox" name="features" value="ease_of_use"> Ease of Use</label><br>
-                <label><input type="checkbox" name="features" value="interface"> User Interface</label>
-            </div>
+        <div class="switch_tabs" style="margin: 1em;text-align: center; position:fixed; top:0; left:44%; background-color: #fff;z-index: 10;">
+            <button class="btn btn-info" onclick="showTab('survey')">Survey</button>
+            <button class="btn btn-info" onclick="showTab('email')">
+                View Email
+            </button>
+        </div>
+    
+        <div id="survey_div" class="survey_div" style="margin: 5em;">
+            <h1>Session Ended - We Value Your Feedback</h1>
+            <form method="POST" action="/survey">
+                <!-- Rating Question -->
+                <div class="rating-group">
+                    <p><strong>1. How would you rate your experience with the chatbot?</strong></p>
+                    <label><input type="radio" name="rating" value="1" required> 1 - Poor</label><br>
+                    <label><input type="radio" name="rating" value="2"> 2</label><br>
+                    <label><input type="radio" name="rating" value="3"> 3</label><br>
+                    <label><input type="radio" name="rating" value="4"> 4</label><br>
+                    <label><input type="radio" name="rating" value="5"> 5 - Excellent</label>
+                </div>
 
-            <!-- Single Choice Question -->
-            <div class="single-choice-group">
-                <p><strong>3. How often do you use the chatbot?</strong></p>
-                <label><input type="radio" name="frequency" value="daily" required> Daily</label><br>
-                <label><input type="radio" name="frequency" value="weekly"> Weekly</label><br>
-                <label><input type="radio" name="frequency" value="monthly"> Monthly</label><br>
-                <label><input type="radio" name="frequency" value="rarely"> Rarely</label>
-            </div>
+                <!-- Multiple Choice Question -->
+                <div class="multiple-choice-group">
+                    <p><strong>2. Which features did you find the most useful? (Select all that apply)</strong></p>
+                    <label><input type="checkbox" name="features" value="speed"> Speed</label><br>
+                    <label><input type="checkbox" name="features" value="accuracy"> Accuracy</label><br>
+                    <label><input type="checkbox" name="features" value="ease_of_use"> Ease of Use</label><br>
+                    <label><input type="checkbox" name="features" value="interface"> User Interface</label>
+                </div>
 
-            <!-- Likert Scale Question -->
-            <div class="likert-scale-group">
-                <p><strong>4. Please indicate how much you agree or disagree with the following statements:</strong></p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Statement</th>
-                            <th>Strongly Disagree</th>
-                            <th>Disagree</th>
-                            <th>Neutral</th>
-                            <th>Agree</th>
-                            <th>Strongly Agree</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>The chatbot was easy to use.</td>
-                            <td><input type="radio" name="easy_to_use" value="1" required></td>
-                            <td><input type="radio" name="easy_to_use" value="2"></td>
-                            <td><input type="radio" name="easy_to_use" value="3"></td>
-                            <td><input type="radio" name="easy_to_use" value="4"></td>
-                            <td><input type="radio" name="easy_to_use" value="5"></td>
-                        </tr>
-                        <tr>
-                            <td>The chatbot provided accurate responses.</td>
-                            <td><input type="radio" name="accurate_responses" value="1" required></td>
-                            <td><input type="radio" name="accurate_responses" value="2"></td>
-                            <td><input type="radio" name="accurate_responses" value="3"></td>
-                            <td><input type="radio" name="accurate_responses" value="4"></td>
-                            <td><input type="radio" name="accurate_responses" value="5"></td>
-                        </tr>
-                        <tr>
-                            <td>I would recommend the chatbot to others.</td>
-                            <td><input type="radio" name="recommend" value="1" required></td>
-                            <td><input type="radio" name="recommend" value="2"></td>
-                            <td><input type="radio" name="recommend" value="3"></td>
-                            <td><input type="radio" name="recommend" value="4"></td>
-                            <td><input type="radio" name="recommend" value="5"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                <!-- Single Choice Question -->
+                <div class="single-choice-group">
+                    <p><strong>3. How often do you use the chatbot?</strong></p>
+                    <label><input type="radio" name="frequency" value="daily" required> Daily</label><br>
+                    <label><input type="radio" name="frequency" value="weekly"> Weekly</label><br>
+                    <label><input type="radio" name="frequency" value="monthly"> Monthly</label><br>
+                    <label><input type="radio" name="frequency" value="rarely"> Rarely</label>
+                </div>
 
-            <!-- Open-Ended Question -->
-            <div class="open-ended-group">
-                <p><strong>5. Any comments or suggestions for improvement?</strong></p>
-                <textarea name="comments" rows="4" placeholder="Enter your comments here..."></textarea>
-            </div>
+                <!-- Likert Scale Question -->
+                <div class="likert-scale-group">
+                    <p><strong>4. Please indicate how much you agree or disagree with the following statements:</strong></p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Statement</th>
+                                <th>Strongly Disagree</th>
+                                <th>Disagree</th>
+                                <th>Neutral</th>
+                                <th>Agree</th>
+                                <th>Strongly Agree</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>The chatbot was easy to use.</td>
+                                <td><input type="radio" name="easy_to_use" value="1" required></td>
+                                <td><input type="radio" name="easy_to_use" value="2"></td>
+                                <td><input type="radio" name="easy_to_use" value="3"></td>
+                                <td><input type="radio" name="easy_to_use" value="4"></td>
+                                <td><input type="radio" name="easy_to_use" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td>The chatbot provided accurate responses.</td>
+                                <td><input type="radio" name="accurate_responses" value="1" required></td>
+                                <td><input type="radio" name="accurate_responses" value="2"></td>
+                                <td><input type="radio" name="accurate_responses" value="3"></td>
+                                <td><input type="radio" name="accurate_responses" value="4"></td>
+                                <td><input type="radio" name="accurate_responses" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td>I would recommend the chatbot to others.</td>
+                                <td><input type="radio" name="recommend" value="1" required></td>
+                                <td><input type="radio" name="recommend" value="2"></td>
+                                <td><input type="radio" name="recommend" value="3"></td>
+                                <td><input type="radio" name="recommend" value="4"></td>
+                                <td><input type="radio" name="recommend" value="5"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-            <!-- Submit Button -->
-            <div class="submit-btn">
-                <button type="submit">Submit</button>
+                <!-- Open-Ended Question -->
+                <div class="open-ended-group">
+                    <p><strong>5. Any comments or suggestions for improvement?</strong></p>
+                    <textarea name="comments" rows="4" placeholder="Enter your comments here..."></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="submit-btn">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="email-ui" class="email-ui" style="display:none ;max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 5px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+            <div style="background-color: #007bff; color: #ffffff; padding: 15px; text-align: center;">
+                <h1 style="margin: 0; font-size: 24px;">{{ email_subject }}</h1>
             </div>
-        </form>
+            <div style="padding: 20px;">
+                <p style="font-size: 14px; line-height: 1.5; color: #777777;">
+                    <strong>From:</strong> {{ email_sender }}
+                </p>
+                <p style="font-size: 16px; line-height: 1.5; color: #333333; overflow-y: auto; max-height: 300px;">
+                    {{ email_content }}
+                </p>
+            </div>
+            <div style="background-color: #f8f8f8; text-align: center; padding: 10px;">
+                <p style="font-size: 14px; color: #777777; margin: 0;">
+                    &copy; Ujima S&P Lab
+                </p>
+            </div>
+        </div>
     </div>
+
+    <script>
+      function showTab(tabId) {
+        // Initially hide both chat and email
+        document.getElementById('survey_div').style.display = 'none';
+        document.getElementById('email-ui').style.display = 'none';
+      
+        // Display the correct tab based on the button clicked
+        if (tabId === 'survey') {
+          document.getElementById('survey_div').style.display = 'block'; // Show chat
+        } else if (tabId === 'email') {
+          document.getElementById('email-ui').style.display = 'block'; // Show email
+        }
+      }
+                           
+    </script>
 </body>
 </html>

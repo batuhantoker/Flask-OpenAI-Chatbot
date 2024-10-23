@@ -265,7 +265,7 @@ def chatbot():
     else:
         time_left = TIMER_LIMIT  # If the timer hasn't started, show full time
 
-    # Fetch a random email to display
+    # Fetch email to display
     email = svc.getEmailRecordByUuid(session["email_id"])
 
     email_sender = email["From"].values[0]
@@ -376,8 +376,10 @@ def end_session():
 
     # Clear the session except for temp_user_id
     temp_user_id = session.get('temp_user_id')
+    temp_email_id = session.get("email_id")
     session.clear()
     session['temp_user_id'] = temp_user_id
+    session["temp_email_id"] = temp_email_id
 
     # Redirect to survey page
     return redirect(url_for('survey', user_id=temp_user_id))
@@ -408,7 +410,20 @@ def survey():
         session.clear()  # Clear the session fully after survey is completed
         return redirect(url_for('login'))
 
-    return render_template('survey.html')
+    # Fetch email to display
+    email = svc.getEmailRecordByUuid(session["temp_email_id"])
+
+    email_sender = email["From"].values[0]
+    email_subject = email["Subject"].values[0]
+    email_content = email["Email Content"].values[0]
+
+
+    return render_template(
+        'survey.html', 
+        email_sender=email_sender,
+        email_subject=email_subject,
+        email_content=email_content
+    )
 
 
 
