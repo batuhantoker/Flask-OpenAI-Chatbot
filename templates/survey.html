@@ -83,9 +83,50 @@
 </head>
 <body>
     <div class="container">
-        <h1>Session Ended - We Value Your Feedback</h1>
+        <h1>End Survey</h1>
         <form method="POST" action="/survey">
-            <!-- Rating Question -->
+
+            <!-- Multiple Choice Question -->
+            <div class="multiple-choice-group">
+                <p><strong>1. How would you respond to the email you were shown? (Please select all that apply)</strong></p>
+                <label><input type="checkbox" name="features" value="speed"> Keep, save, or archive the email</label><br>
+                <label><input type="checkbox" name="features" value="accuracy"> Click on link or links provided (if any)</label><br>
+                <label><input type="checkbox" name="features" value="ease_of_use"> Forward the email to somoene else</label><br>
+                <label><input type="checkbox" name="features" value="interface"> Reply to the email</label><br>
+                <label><input type="checkbox" name="features" value="speed"> Delete the email</label><br>
+                <label><input type="checkbox" name="features" value="accuracy"> Search for more information on Google (Please specify)</label><br>
+                <label><input type="checkbox" name="features" value="ease_of_use"> Other (Please specify)</label>
+            </div>
+
+            <!-- Multiple Choice Question -->
+            <div class="multiple-choice-group">
+                <p><strong>2. How would you categorize this type of email? (Select all that apply)</strong></p>
+                <label><input type="checkbox" name="features" value="speed"> Spam</label><br>
+                <label><input type="checkbox" name="features" value="accuracy"> Not spam</label><br>
+                <label><input type="checkbox" name="features" value="ease_of_use"> Potentially spam</label>
+            </div>
+
+            <!-- Open-Ended Question -->
+            <div class="open-ended-group">
+                <p><strong>3. Based on your previous answer, please explain why you selected that choice</strong></p>
+                <textarea name="comments" rows="4" placeholder="Enter your comments here..."></textarea>
+            </div>
+
+            <div class="single-choice-group">
+                <p><strong>4. Did you learn anything new about detecting spam emails during your interaction with the chatbot?</strong></p>
+                <label><input type="radio" name="frequency" value="daily" required> Yes </label><br>
+                <label><input type="radio" name="frequency" value="weekly"> No </label>
+            </div>
+
+            <!-- Open-Ended Question -->
+            <div class="open-ended-group">
+                <p><strong>5. If your previous answer was'Yes', please briefly describe what you learned from this interaction. </strong></p>
+                <textarea name="comments" rows="4" placeholder="Enter your comments here..."></textarea>
+            </div>
+
+            <!--###########################################################################-->
+            
+            <!--
             <div class="rating-group">
                 <p><strong>1. How would you rate your experience with the chatbot?</strong></p>
                 <label><input type="radio" name="rating" value="1" required> 1 - Poor</label><br>
@@ -95,7 +136,6 @@
                 <label><input type="radio" name="rating" value="5"> 5 - Excellent</label>
             </div>
 
-            <!-- Multiple Choice Question -->
             <div class="multiple-choice-group">
                 <p><strong>2. Which features did you find the most useful? (Select all that apply)</strong></p>
                 <label><input type="checkbox" name="features" value="speed"> Speed</label><br>
@@ -104,7 +144,6 @@
                 <label><input type="checkbox" name="features" value="interface"> User Interface</label>
             </div>
 
-            <!-- Single Choice Question -->
             <div class="single-choice-group">
                 <p><strong>3. How often do you use the chatbot?</strong></p>
                 <label><input type="radio" name="frequency" value="daily" required> Daily</label><br>
@@ -113,7 +152,6 @@
                 <label><input type="radio" name="frequency" value="rarely"> Rarely</label>
             </div>
 
-            <!-- Likert Scale Question -->
             <div class="likert-scale-group">
                 <p><strong>4. Please indicate how much you agree or disagree with the following statements:</strong></p>
                 <table>
@@ -156,11 +194,11 @@
                 </table>
             </div>
 
-            <!-- Open-Ended Question -->
             <div class="open-ended-group">
                 <p><strong>5. Any comments or suggestions for improvement?</strong></p>
                 <textarea name="comments" rows="4" placeholder="Enter your comments here..."></textarea>
             </div>
+            -->
 
             <!-- Submit Button -->
             <div class="submit-btn">
@@ -168,5 +206,7 @@
             </div>
         </form>
     </div>
+    </script>
+
 </body>
 </html>

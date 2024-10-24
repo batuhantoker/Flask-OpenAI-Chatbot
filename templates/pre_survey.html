@@ -83,9 +83,49 @@
 </head>
 <body>
     <div class="container">
-        <h1>Session Ended - We Value Your Feedback</h1>
+        <h1>Pre-Survey</h1>
         <form method="POST" action="/pre-survey">
-            <!-- Rating Question -->
+            <!-- Open-Ended Question -->
+            <div class="open-ended-group">
+                <p><strong>1. Which email provider do you use? (Please provide one word)</strong></p>
+                <textarea name="email-provider" rows="4" placeholder="Enter your answer here..."></textarea>
+            </div>
+
+            <!-- Single Choice Question -->
+            <div class="single-choice-group">
+                <p><strong>2. How often do you use your email?</strong></p>
+                <label><input type="radio" name="email-frequency" value="daily" required> Daily</label><br>
+                <label><input type="radio" name="email-frequency" value="weekly"> Weekly</label><br>
+                <label><input type="radio" name="email-frequency" value="monthly"> Monthly</label>
+            </div>
+
+            <!-- Single Choice Question -->
+            <div class="single-choice-group">
+                <p><strong>3. Have you ever interacted with ChatGPT?</strong></p>
+                <label><input type="radio" name="chatgpt-interaction" value="GPT_yes" required> Yes</label><br>
+                <label><input type="radio" name="chatgpt-interaction" value="GPT_no"> No</label><br>
+                <label><input type="radio" name="chatgpt-interaction" value="GPT_idk"> I do not know</label>
+            </div>
+
+            <!-- Single Choice Question -->
+            <div class="single-choice-group">
+                <p><strong>4. Have you ever interacted with a chatbot?</strong></p>
+                <label><input type="radio" name="bot-interaction" value="bot_yes" required> Yes</label><br>
+                <label><input type="radio" name="bot-interaction" value="bot_no"> No</label><br>
+                <label><input type="radio" name="bot-interaction" value="bot_idk"> I do not know</label>
+            </div>
+
+            <!-- Multiple Choice Question -->
+            <div class="multiple-choice-group">
+                <p><strong>5. Email and computer literacy (Please select all that apply)</strong></p>
+                <label><input type="checkbox" name="computer-literacy" value="file_attatchment_no_confidence"> I do not feel confident attaching a file to an email</label><br>
+                <label><input type="checkbox" name="computer-literacy" value="verify_email_sender"> I know how to determine who sent me an email</label><br>
+                <label><input type="checkbox" name="computer-literacy" value="spam_detection_confidence"> I am confident in my ability to determine whether an email is spam without assistance</label>
+            </div>
+
+            <!--########################################################-->
+            
+            <!--
             <div class="rating-group">
                 <p><strong>1. How would you rate your experience with the chatbot?</strong></p>
                 <label><input type="radio" name="rating" value="1" required> 1 - Poor</label><br>
@@ -95,7 +135,7 @@
                 <label><input type="radio" name="rating" value="5"> 5 - Excellent</label>
             </div>
 
-            <!-- Multiple Choice Question -->
+            
             <div class="multiple-choice-group">
                 <p><strong>2. Which features did you find the most useful? (Select all that apply)</strong></p>
                 <label><input type="checkbox" name="features" value="speed"> Speed</label><br>
@@ -104,7 +144,7 @@
                 <label><input type="checkbox" name="features" value="interface"> User Interface</label>
             </div>
 
-            <!-- Single Choice Question -->
+            
             <div class="single-choice-group">
                 <p><strong>3. How often do you use the chatbot?</strong></p>
                 <label><input type="radio" name="frequency" value="daily" required> Daily</label><br>
@@ -113,7 +153,7 @@
                 <label><input type="radio" name="frequency" value="rarely"> Rarely</label>
             </div>
 
-            <!-- Likert Scale Question -->
+            
             <div class="likert-scale-group">
                 <p><strong>4. Please indicate how much you agree or disagree with the following statements:</strong></p>
                 <table>
@@ -156,11 +196,12 @@
                 </table>
             </div>
 
-            <!-- Open-Ended Question -->
+            
             <div class="open-ended-group">
                 <p><strong>5. Any comments or suggestions for improvement?</strong></p>
                 <textarea name="comments" rows="4" placeholder="Enter your comments here..."></textarea>
             </div>
+            -->
 
             <!-- Submit Button -->
             <div class="submit-btn">
