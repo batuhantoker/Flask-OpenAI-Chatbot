@@ -320,6 +320,10 @@ def message_side_format(is_bot):
 # Save session info to file and clean up the "in use" list
 def save_user_session_data():
     for user_id, data in user_sessions.items():
+        if 'start_time' not in data:
+            print(f"User {user_id} is missing start_time")
+            continue  # Skip saving if start_time is missing
+        
         start_time = data['start_time']
         user_dir = data['user_dir']
         chat_history = data['chat_history']
@@ -346,17 +350,11 @@ def save_user_session_data():
         except Exception as e:
             print(f"Failed to create JSON file: {e}")
 
-        # # Mark the user ID as used
-        # mark_user_id_as_used(user_id)
-        # # Remove the user ID from the "in use" list
-        # remove_user_id_from_in_use(user_id)
-
 
 # Function that will end the session for the user, either button was pressed or 
 # time is over.
 @application.route("/end-session")
 def end_session():
-    # Integrate Survey Collection After Session Ends
     user_id = session.get('user_id')
 
     if user_id:
@@ -366,7 +364,6 @@ def end_session():
         # Fetch the user record
         user = svc.find_account_by_user_id(user_id)
         if user:
-            # Only reset survey_completed if the survey hasn't been completed
             if not user.survey_completed:
                 user.timer_is_running = False  # Stop the timer
                 user.save()
