@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Instructions</title>
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f9fafc;
+      }
+
+      /* Title Styling */
+      .page-title {
+        text-align: center;
+        font-size: 32px;
+        font-weight: bold;
+        margin-top: 20px;
+        color: #333;
+      }
+
+      /* Instructions Section */
+      .instructions-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        max-width: 800px;
+        margin: 30px auto;
+        gap: 20px;
+      }
+
+      /* Instruction Card */
+      .instruction-card {
+        display: flex;
+        align-items: center;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: 100%;
+      }
+
+      /* Icon Styling */
+      .instruction-icon {
+        font-size: 32px;
+        margin-right: 15px;
+        color: #4e919c;
+      }
+
+      /* Instruction Text */
+      .instruction-text {
+        font-size: 18px;
+        color: #444;
+        line-height: 1.6;
+      }
+
+      /* Next Button and Disclaimer */
+      .disclaimer-container {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .disclaimer-text {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 10px;
+      }
+
+      .next-button {
+        background-color: #4e919c;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 12px 24px;
+        font-size: 18px;
+        cursor: pointer;
+      }
+
+      .next-button:hover {
+        background-color: #3b6d71;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Title -->
+    <div class="page-title">Instructions</div>
+
+    <!-- Instructions Section -->
+    <div class="instructions-section">
+      <div class="instruction-card">
+        <i class="fas fa-list-alt instruction-icon"></i>
+        <div class="Email and Chatbot">
+          <b>Step 1:</b> In the next page you will be presented with an email that may or may not be spam.
+          On the bottom right of the page, there will be chatbot. The chatbot will contain your user
+          ID number and you can type your prompts on the bottom message bar.
+        </div>
+      </div>
+
+      <div class="instruction-card">
+        <i class="fas fa-list-alt instruction-icon"></i>
+        <div class="Timer and Proceed to Survey Button">
+          <b>Step 2:</b> You will also see a timer on the top right of screen as well as a green button that
+          reads "Proceed to Survey". You will have 10 minutes to complete the task, after 10 minutes,
+          you will automatically be redirected to the end survey. If you finish your task early, you
+          may click the "Proceed to Survey" button.
+        </div>
+      </div>
+
+      <div class="instruction-card">
+        <i class="fas fa-list-alt instruction-icon"></i>
+        <div class="Your Task">
+          <b>Step 3:</b> Please read the email carefully and use the chatbot to help you identify whether the
+          email is spam or not spam.
+        </div>
+      </div>
+
+      <div class="instruction-card">
+        <i class="fas fa-list-alt instruction-icon"></i>
+        <div class="Disclaimer">
+          <b>Step 4:</b> You may ask the chatbot anything you need to help you determine if the email is spam or not,
+          but please do not share anything you wish to keep private because the conversation will be reviewed.
+        </div>
+      </div>
+
+      <div class="instruction-card">
+        <i class="fas fa-list-alt instruction-icon"></i>
+        <div class="End Survey">
+          <b>Step 5:</b> Once you have clicked "Proceed to Survey" or the alotted amount of time has been reached, 
+          you will be redirected to the post-sruvey. The end survey page will have the final survey and two
+          buttons. One will read "Survey" and the other will read "Email", you can click these buttons to 
+          display the survey or the email so you may refer back to the email if necessary.
+        </div>
+      </div>
+      <!--
+      <div class="instruction-card">
+        <i class="fas fa-list-alt instruction-icon"></i>
+        <div class="">
+          Step 6: Submit your work and wait for confirmation that it has been successfully completed.
+        </div>
+      </div>
+      -->
+    </div>
+      
+    <!-- Disclaimer and Next Button -->
+    <div class="disclaimer-container">
+      <div class="disclaimer-text">
+        Click <strong>Next</strong>, to proceed to the Chatbot.
+      </div>
+
+      <!-- Form to trigger timer start and redirect -->
+      <form action="{{ url_for('start_timer') }}" method="POST">
+        <button class="next-button" type="submit">Next</button>
+      </form>
+    </div>
+  </body>
+</html>

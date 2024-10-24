@@ -1,0 +1,6 @@
+flask
+openai
+pandas
+pymongo
+mongoengine
+python-dateutil
