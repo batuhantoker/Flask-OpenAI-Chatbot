@@ -50,7 +50,7 @@ gap: 2rem;
   position: fixed;
   bottom: 10px; /* Space from the bottom */
   right: 10px;  /* Space from the right */
-  width: 400px; /* Slightly smaller width */
+  width: 450px; /* Slightly smaller width */
   height: 500px; /* Full height */
   background-color: white;
   z-index: 100; /* Above the Gmail UI */
