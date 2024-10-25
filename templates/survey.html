@@ -105,12 +105,17 @@
                 <label><input type="checkbox" name="user-email-action" value="forward"> Forward the email to somoene else</label><br>
                 <label><input type="checkbox" name="user-email-action" value="reply"> Reply to the email</label><br>
                 <label><input type="checkbox" name="user-email-action" value="delete"> Delete the email</label><br>
-                <label><input type="checkbox" name="user-email-action" value="more_info"> Search for more information on Google (Please specify)</label><br>
                 <label><input type="checkbox" name="user-email-action" value="other"> Other (Please specify)</label>
             </div>
 
+            <!-- Open-Ended Question -->
+            <div class="open-ended-group">
+                <p><strong>2. If you selected 'Other' as your response to the previous question, please elaborate on what action you would take</strong></p>
+                <textarea name="verdict-explanation" rows="4" placeholder="Enter your response here..."></textarea>
+            </div>
+
             <div class="single-choice-group">
-                <p><strong>2. How would you categorize this type of email? (Select all that apply)</strong></p>
+                <p><strong>3. How would you categorize this type of email? (Select all that apply)</strong></p>
                 <label><input type="radio" name="user-verdict" value="spam" required> Spam </label><br>
                 <label><input type="radio" name="user-verdict" value="ham" required> Not spam </label><br>
                 <label><input type="radio" name="user-verdict" value="potentially_spam"> NPotentially spam </label>
@@ -118,19 +123,19 @@
 
             <!-- Open-Ended Question -->
             <div class="open-ended-group">
-                <p><strong>3. Based on your previous answer, please explain why you selected that choice</strong></p>
+                <p><strong>4. Based on your previous answer, please explain why you selected that choice</strong></p>
                 <textarea name="verdict-explanation" rows="4" placeholder="Enter your response here..."></textarea>
             </div>
 
             <div class="single-choice-group">
-                <p><strong>4. Did you learn anything new about detecting spam emails during your interaction with the chatbot?</strong></p>
+                <p><strong>5. Did you learn anything new about detecting spam emails during your interaction with the chatbot?</strong></p>
                 <label><input type="radio" name="user-learning" value="yes" required> Yes </label><br>
                 <label><input type="radio" name="user-learning" value="no"> No </label>
             </div>
 
             <!-- Open-Ended Question -->
             <div class="open-ended-group">
-                <p><strong>5. If your previous answer was'Yes', please briefly describe what you learned from this interaction. </strong></p>
+                <p><strong>6. If your previous answer was'Yes', please briefly describe what you learned from this interaction. </strong></p>
                 <textarea name="explain-learning" rows="4" placeholder="Enter your response here..."></textarea>
             </div>
 
