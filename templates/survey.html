@@ -109,12 +109,11 @@
                 <label><input type="checkbox" name="user-email-action" value="other"> Other (Please specify)</label>
             </div>
 
-            <!-- Multiple Choice Question -->
-            <div class="multiple-choice-group">
+            <div class="single-choice-group">
                 <p><strong>2. How would you categorize this type of email? (Select all that apply)</strong></p>
-                <label><input type="checkbox" name="user-verdict" value="spam"> Spam</label><br>
-                <label><input type="checkbox" name="user-verdict" value="not_spam"> Not spam</label><br>
-                <label><input type="checkbox" name="user-verdict" value="potentially_spam"> Potentially spam</label>
+                <label><input type="radio" name="user-verdict" value="spam" required> Spam </label><br>
+                <label><input type="radio" name="user-verdict" value="ham" required> Not spam </label><br>
+                <label><input type="radio" name="user-verdict" value="potentially_spam"> NPotentially spam </label>
             </div>
 
             <!-- Open-Ended Question -->
@@ -137,8 +136,9 @@
 
                 <!-- Submit Button -->
                 <div class="submit-btn">
-                    <button type="submit" class="btn btn-success">Submit</button>
+                    <button type="submit">Submit</button>
                 </div>
+
             </form>
         </div>
 
@@ -169,9 +169,9 @@
         document.getElementById('email-ui').style.display = 'none';
       
         // Display the correct tab based on the button clicked
-        if (tabId === 'survey') {
+        if (tabId === 'Survey') {
           document.getElementById('survey_div').style.display = 'block'; // Show chat
-        } else if (tabId === 'email') {
+        } else if (tabId === 'Email') {
           document.getElementById('email-ui').style.display = 'block'; // Show email
         }
       }
