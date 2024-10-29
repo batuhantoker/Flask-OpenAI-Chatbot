@@ -91,18 +91,53 @@ body {
   display: block;
 }
 
-/* Collapsed Chat Window */
+/* <!-- Styles for Improved UI/UX --> */
+.email-container {
+    display: none; /* Initially hidden */
+    padding: 20px;
+    border: 1px solid #d1d1d1;
+    border-radius: 10px;
+    background-color: #ffffff;
+    max-width: 700px;
+    margin: 20px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.email-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.email-heading {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #333;
+    margin-top: 15px;
+}
+
+/* Collapsed Chat Window with Red Background */
 .chat_window.collapsed {
-  height: 50px; /* Only show the header when collapsed */
+  height: 50px !important; /* Set height for circle */
+  width: 50px !important; /* Set width for circle */
+  border-radius: 50% !important; /* Ensure circular shape */
+  background-color: #ae312f !important; /* Solid red background */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  right: 20px !important; /* Gap from right */
+  bottom: 20px !important; /* Gap from bottom */
+  overflow: hidden !important; /* Prevent content overflow */
+  padding: 0 !important;
 }
 
 .chat_window.expanded {
   height: 500px; /* Full height when expanded */
 }
 
-/* Hide the content when collapsed */
+/* Hide chat content when collapsed */
 .collapsed #chatContent {
   display: none;
+  max-height: 0;
+  overflow: hidden;
 }
 
 .messages {
@@ -408,7 +443,7 @@ body.my-login-page {
 /* GOOGLE */
 .gmail-ui-container {
   position: fixed;
-  top: 70px; /* Below the disclaimer */
+  top: 90px; /* Below the disclaimer */
   left: 0;
   right: 0;
   bottom: 0;
@@ -614,10 +649,78 @@ body.my-login-page {
 }
 
 /* end */
-/* Relocate the End Session button to the top left */
+/* General styling for the Chatbot Section */
+#chatbot-section .container {
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 20px; /* Increased padding for a larger screen */
+  background-color: #4e919c;
+  margin: 0 auto;
+  max-width: 70%; /* Centered and width-adjusted for larger screens */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Paragraph Styling */
+#chatbot-section .container p {
+  font-family: Arial, sans-serif;
+  color: white;
+  font-size: 16px;
+  width: 100%;
+  text-align: center;
+}
+
+/* End Session Button */
 #end-session-btn {
   position: fixed;
   top: 10px;
   left: 10px;
-  z-index: 3; /* Make sure it's on top of everything else */
+  z-index: 3;
+  background-color: #ae312f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 4px 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Timer Styling */
+#timer {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  font-weight: bold;
+  background-color: black;
+  font-size: 1rem;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 4px 8px;
+}
+/* Responsive adjustments for smaller screens */
+@media (max-width: 600px) {
+  /* Container adjustments for smaller screens */
+  #chatbot-section .container {
+    padding: 6px; /* Slightly reduce padding */
+    max-width: 70%; /* Expand width */
+  }
+
+  /* End Session Button with 'End' label */
+  #end-session-btn {
+    font-size: 0.9rem; /* Slightly reduce font size */
+    padding: 4px 6px; /* Smaller padding */
+    width: 50px; /* Fixed width to fit 'End' text */
+
+  }
+
+  /* Timer Styling adjustments */
+  #timer {
+    font-size: 0.9rem; /* Slightly reduce font size */
+    padding: 4px 6px; /* Adjust padding for better fit */
+    right: 10px; /* Align equal to the 'End' button on the left side */
+
+  }
 }

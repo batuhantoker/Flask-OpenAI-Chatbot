@@ -36,7 +36,7 @@ api_key = my_api_key
 client = OpenAI(api_key=api_key)
 
 # Set the default timer in seconds
-TIMER_LIMIT = 300
+TIMER_LIMIT = 30000
 
 # Define the name of the bot
 name = 'Assitant'
