@@ -20,6 +20,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            overflow-y: scroll;
         }
         .survey_div {
             background-color: #fff;
@@ -147,24 +148,25 @@
             </form>
         </div>
 
-        <div id="email-ui" class="email-ui" style="display:none ;max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 5px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-            <div style="background-color: #4a8bad; color: #ffffff; padding: 15px; text-align: center;">
-                <h1 style="margin: 0; font-size: 24px;">{{ email_subject }}</h1>
+        <div id="email-ui" class="email-ui" style="display:none; max-width: 800px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);">
+            <div style="background-color: #4a8bad; color: #ffffff; padding: 20px; text-align: center;">
+                <h1 style="margin: 0; font-size: 28px; color: #ffffff;">{{ email_subject }}</h1>
             </div>
-            <div style="padding: 20px;">
-                <p style="font-size: 14px; line-height: 1.5; color: #777777;">
+            <div style="padding: 25px;">
+                <p style="font-size: 16px; line-height: 1.6; color: #777777;">
                     <strong>From:</strong> {{ email_sender }}
                 </p>
-                <p style="font-size: 16px; line-height: 1.5; color: #333333; overflow-y: auto; max-height: 300px;">
+                <p style="font-size: 18px; line-height: 1.6; color: #333333; overflow-y: auto; max-height: 400px;">
                     {{ email_content }}
                 </p>
             </div>
-            <div style="background-color: #f8f8f8; text-align: center; padding: 10px;">
-                <p style="font-size: 14px; color: #777777; margin: 0;">
+            <div style="background-color: #f8f8f8; text-align: center; padding: 15px;">
+                <p style="font-size: 16px; color: #777777; margin: 0;">
                     &copy; Ujima S&P Lab
                 </p>
             </div>
         </div>
+
     </div>
 
     <script>
@@ -174,9 +176,9 @@
         document.getElementById('email-ui').style.display = 'none';
       
         // Display the correct tab based on the button clicked
-        if (tabId === 'Survey') {
+        if (tabId === 'survey') {
           document.getElementById('survey_div').style.display = 'block'; // Show chat
-        } else if (tabId === 'Email') {
+        } else if (tabId === 'email') {
           document.getElementById('email-ui').style.display = 'block'; // Show email
         }
       }
