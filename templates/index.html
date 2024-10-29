@@ -22,37 +22,26 @@
   </head>
 
   <body>
-    <div
-      class="container"
-      style="
-        border: 1px solid black;
-        border-radius: 10px;
-        padding: 10px;
-        background-color: #4e919c;
-        margin: auto;
-      "
-    >
-      <p style="font-family: Arial; color: white; font-size: 15px">
-        Please read the email provided carefully and use the chatbot to help you 
-        determine if the email is spam or not. This Chatbot will be used for a 
-        research study, the prompts entered will be recorded and analyzed. Do not 
-        enter any information you wish to keep private.
-      </p>
-    </div>
     
-    <div class="session-info">
-        <!-- End Session Button -->
-        <button id="end-session-btn" class="btn btn-success" onclick="endSession()">
-            Proceed To Survey
-        </button>
-        
-        {# Timer #}
-        <p id="timer" style="font-weight: bold; font-size: 2rem;">
-            {{TIMER_LIMIT|timer_format}}
+    <div id="chatbot-section">
+      <div class="container">
+        <p>
+          Please read the email provided carefully and use the chatbot to help you 
+          determine if the email is spam or not. This Chatbot will be used for a 
+          research study; the prompts entered will be recorded and analyzed. Do not 
+          enter any information you wish to keep private.
         </p>
     
+        <!-- Flex container for End Session and Timer within the container for better alignment -->
+        <div class="end-session-timer">
+          <button id="end-session-btn">Proceed To Survey</button>
+          <div id="timer">{{TIMER_LIMIT|timer_format}}</div>
+        </div>
+      </div>
     </div>
-     
+    
+    
+  
     <!-- Add tab buttons @girma_terfa -->
      <!-- 
     <div class="container" style="margin-bottom: 20px; text-align: center">
@@ -185,34 +174,6 @@
       </div>
     </div>
   </div>
-
-
-    <!-- Styles for Improved UI/UX -->
-    <style>
-      .email-container {
-          display: none; /* Initially hidden */
-          padding: 20px;
-          border: 1px solid #d1d1d1;
-          border-radius: 10px;
-          background-color: #ffffff;
-          max-width: 700px;
-          margin: 20px auto;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-
-      .email-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-      }
-
-      .email-heading {
-          font-size: 1.3em;
-          font-weight: bold;
-          color: #333;
-          margin-top: 15px;
-      }
-    </style>
 
     <!-- JavaScript for Copy Functionality -->
     <script>
