@@ -1,6 +1,6 @@
-flask
-openai
-pandas
-pymongo
-mongoengine
-python-dateutil
+Flask==3.0.3
+openai==1.41.0
+pandas==2.2.3
+pymongo==4.8.0
+mongoengine==0.29.0
+python-dateutil==2.9.0
