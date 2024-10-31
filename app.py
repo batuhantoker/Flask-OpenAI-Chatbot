@@ -405,11 +405,14 @@ def survey():
 
         flash("Survey responses saved successfully. Session ended.")
         session.clear()  # Clear the session fully after survey is completed
-        return redirect(url_for('login'))
+
+        # Render a template with a redirect script
+        return render_template("redirect_after_submit.html", redirect_url="https://docs.google.com/document/d/1dqDm4nkdzaRoT9GOtNfQEzQODbYUvxOMkugTin3n48c/edit?tab=t.0")
+
+        #return redirect(url_for('login'))
 
     # Fetch email to display
     email = svc.getEmailRecordByUuid(session["temp_email_id"])
-
     email_sender = email["From"].values[0]
     email_subject = email["Subject"].values[0]
     email_content = email["Email Content"].values[0]
@@ -489,4 +492,4 @@ atexit.register(save_user_session_data)
 # atexit.register(lambda: scheduler.shutdown())
 
 if __name__ == "__main__":
-    application.run()  # Run the application
+    application.run(host="0.0.0.0", port=5000)  # Run the application
