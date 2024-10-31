@@ -391,14 +391,23 @@ def survey():
         return redirect(url_for('login'))
 
     if request.method == 'POST':
+        # Retrieve survey responses and handle multiple selections
+        survey_responses = {
+            key: ", ".join(request.form.getlist(key)) if len(request.form.getlist(key)) > 1 else request.form[key]
+            for key in request.form.keys()
+        }
+
         # Retrieve survey responses from the form
-        survey_response = request.form.to_dict()
-        survey_response['features'] = request.form.getlist('features')
+        #survey_response = request.form.to_dict()
+        # Collect multiple checkbox values for 'user-email-action' field
+        #survey_response['user-email-action'] = request.form.getlist('user-email-action')
+        
+        #survey_response['features'] = request.form.getlist('features')
 
         # Find the user and update survey responses
         user = svc.find_account_by_user_id(user_id)
         if user:
-            user.survey_responses = survey_response
+            user.survey_responses = survey_responses
             user.survey_completed = True  # Mark survey as completed
             user.timer_is_running = False  # Ensure the timer is stopped
             user.save()
@@ -453,8 +462,17 @@ def pre_survey():
 
     if request.method == 'POST':
         # Save pre-survey responses to DB
-        pre_survey_responses = request.form.to_dict()
-        pre_survey_responses['features'] = request.form.getlist('features')
+        pre_survey_responses = {
+            key: ", ".join(request.form.getlist(key)) if len(request.form.getlist(key)) > 1 else request.form[key]
+            for key in request.form.keys()
+        }
+
+        # Save pre-survey responses to DB
+        #pre_survey_responses = request.form.to_dict()
+        # Collect multiple checkbox values for 'computer-literacy' field
+        #pre_survey_responses['computer-literacy'] = request.form.getlist('computer-literacy')
+        
+        #pre_survey_responses['features'] = request.form.getlist('features')
         
         # Save pre-survey responses in the user's document
         svc.store_survey_response(session['user_id'], pre_survey_responses, is_pre_survey=True)
