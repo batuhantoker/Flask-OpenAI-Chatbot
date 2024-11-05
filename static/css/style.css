@@ -183,7 +183,7 @@ body {
   float: right;
   width: 50px;
   height: 50px;
-  background-image: url('../images/logos/user.png');
+  background-image: url('../static/images/logos/user.png');
   background-size: cover;
   border-radius: 50%;
   margin-left: 10px;
@@ -443,7 +443,7 @@ body.my-login-page {
 /* GOOGLE */
 .gmail-ui-container {
   position: fixed;
-  top: 90px; /* Below the disclaimer */
+  top: 120px; /* Adjust this to control the vertical space from the top */
   left: 0;
   right: 0;
   bottom: 0;
@@ -456,7 +456,7 @@ body.my-login-page {
   font-family: Arial, sans-serif;
   overflow: auto; /* Allow scrolling if content exceeds window */
   display: flex;
-  height: 100vh;
+  height: calc(100vh - 120px); /* Subtract the same top space to prevent overflow */
 }
 
 
@@ -757,7 +757,7 @@ making the body fit to small screen
 #end-session-btn {
   position: fixed;
   top: 10px;
-  left: 10px;
+  left: 5px;
   z-index: 3;
   background-color: #ae312f;
   color: white;
@@ -772,7 +772,7 @@ making the body fit to small screen
 #timer {
   position: fixed;
   top: 10px;
-  right: 10px;
+  right: 5px;
   font-weight: bold;
   background-color: black;
   font-size: 1rem;
