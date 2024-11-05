@@ -455,6 +455,8 @@ body.my-login-page {
   border-radius: 8px;
   font-family: Arial, sans-serif;
   overflow: auto; /* Allow scrolling if content exceeds window */
+  display: flex;
+  height: 100vh;
 }
 
 
@@ -565,6 +567,8 @@ body.my-login-page {
   padding: 80px 40px 40px 40px;
   position: relative;
   z-index: 1; /* Content should appear under the top bar and sidebar */
+  overflow-y: auto; /* Enable vertical scrolling for content */
+  height: calc(100vh - 50px); /* Adjust based on top bar height */
 }
 
 .gmail-email-header h2 {
@@ -648,6 +652,83 @@ body.my-login-page {
   margin-left: auto;
 }
 
+/* 
+making the body fit to small screen
+*/
+/* Responsive styles for small screens */
+@media (max-width: 768px) {
+    /* Top Bar Adjustments */
+    .gmail-top-bar {
+        padding: 8px 10px; /* Reduce padding */
+        font-size: 14px; /* Reduce font size */
+    }
+
+    .gmail-logo-icon {
+        width: 24px; /* Smaller logo icon */
+        height: 24px;
+    }
+
+    .gmail-search-bar {
+        width: 70%; /* Adjust search bar width */
+        padding: 6px; /* Smaller padding */
+    }
+
+    .gmail-profile-icon {
+        width: 28px; /* Smaller profile icon */
+        height: 28px;
+    }
+
+    /* Content Area Adjustments */
+    .gmail-content {
+        margin-left: 80px; /* Adjust for narrower sidebar */
+        padding: 60px 20px 20px 20px; /* Less padding on small screens */
+    }
+
+    .gmail-email-header h2 {
+        font-size: 18px; /* Smaller header text */
+    }
+
+    .gmail-email-sender, .gmail-recipient, .gmail-email-date {
+        font-size: 12px; /* Smaller font for sender and recipient info */
+    }
+
+    .gmail-body {
+        padding: 15px 0; /* Adjust body padding */
+        font-size: 14px; /* Smaller font size for email content */
+    }
+
+    /* Minimize the sidebar */
+    .gmail-sidebar {
+      width: 60px; /* Narrow sidebar */
+      padding: 10px; /* Adjust padding */
+    }
+
+    /* Only display icons, hide text */
+    .gmail-sidebar ul li a {
+        display: flex;
+        flex-direction: column; /* Stack icon above hidden text */
+        align-items: center;
+        font-size: 0; /* Hide the text */
+    }
+
+    /* Ensure icons stay visible */
+    .gmail-sidebar ul li a i {
+        font-size: 20px; /* Adjust icon size for smaller sidebar */
+        color: #5f6368;
+        margin: 0; /* Remove spacing */
+    }
+    /* Adjust reply buttons at the bottom */
+    .gmail-reply-options button {
+      padding: 4px 8px; /* Smaller padding */
+      font-size: 12px; /* Smaller font size */
+    }
+
+    /* Icon adjustments within buttons */
+    .gmail-reply-options button i {
+      font-size: 14px; /* Adjust icon size */
+    }
+}
+
 /* end */
 /* General styling for the Chatbot Section */
 #chatbot-section .container {
@@ -711,7 +792,7 @@ body.my-login-page {
   /* End Session Button with 'End' label */
   #end-session-btn {
     font-size: 0.9rem; /* Slightly reduce font size */
-    padding: 4px 6px; /* Smaller padding */
+    padding: 2px 6px; /* Smaller padding */
     width: 50px; /* Fixed width to fit 'End' text */
 
   }
@@ -719,7 +800,7 @@ body.my-login-page {
   /* Timer Styling adjustments */
   #timer {
     font-size: 0.9rem; /* Slightly reduce font size */
-    padding: 4px 6px; /* Adjust padding for better fit */
+    padding: 2px 6px; /* Adjust padding for better fit */
     right: 10px; /* Align equal to the 'End' button on the left side */
 
   }
