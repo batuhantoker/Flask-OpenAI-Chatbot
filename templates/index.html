@@ -102,16 +102,12 @@
 
     <!-- End Session Button -->
     <!-- End Session Button (now positioned on top left) -->
-    <button
-      id="end-session-btn"      
-      class="btn btn-danger"
-      style="position: fixed; top: 10px; left: 10px"
-    >
+  <button id="end-session-btn" class="btn btn-danger">
       End Session
-    </button>
+  </button>
 
   <!-- Gmail Email View in a Contained Box -->
-  <div id="gmail-ui" class="gmail-ui-container" style="display: block;">
+<div id="gmail-ui" class="gmail-ui-container" style="display: block;">
     <!-- Gmail Header -->
     <div class="gmail-top-bar">
       <div class="gmail-logo">
@@ -175,25 +171,7 @@
     </div>
   </div>
 
-    <!-- JavaScript for Copy Functionality -->
-    <script>
-      // Add event listeners to the buttons
-      document.querySelector('.gmail-reply-btn').addEventListener('click', (event) => {
-        event.preventDefault(); // Prevent any default action
-      });
     
-      document.querySelector('.gmail-reply-all-btn').addEventListener('click', (event) => {
-        event.preventDefault(); // Prevent any default action
-      });
-    
-      document.querySelector('.gmail-forward-btn').addEventListener('click', (event) => {
-        event.preventDefault(); // Prevent any default action
-      });
-    </script>
-    
-
-
-
     <!-- To pass a variable in external JS -->
     <!-- No longer used, moved the usage inside python -->
     <!-- <div id="userInfo" data-userid="{{ userId }}"></div> -->
@@ -213,8 +191,7 @@
         } else if (tabId === 'email') {
           document.getElementById('gmail-ui').style.display = 'block'; // Show email
         }
-      }
-                           
+      }                    
     </script>
     
     
