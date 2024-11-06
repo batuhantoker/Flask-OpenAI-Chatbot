@@ -38,181 +38,135 @@
         </div>
       </div>
     </div>
-  
-    <!-- Chat Window -->
-<div id="chat" class="chat_window">
-  <div class="top_menu" onclick="toggleChat()"> <!-- Add an onclick event -->
+    
+<!-- Collapsed Chat Button (Profile Picture) -->
+<div id="collapsed-chat" class="chat_window collapsed" onclick="toggleChat()"></div>
+
+<!-- Full Chat Window -->
+<div id="chat" class="chat_window" style="display: none;">
+<div class="top_menu" onclick="toggleChat()">
     <div class="title">Hi, Your User Id is: {{userId}}</div>
-  </div>
-
-  <div id="chatContent"> <!-- Wrap the chat content for toggling -->
-    <ul class="messages">
-      {% for convo in convo_history %}
-      <li class="message {{convo.is_bot|message_side_format}} appeared">
-        <div class="avatar"></div>
-        <div class="text_wrapper">
-          <div class="text">{{convo.content}}</div>
-        </div>
-      </li>
-      {% endfor %}
-    </ul>
-    <div class="bottom_wrapper clearfix">
-      <div class="message_input_wrapper">
-        <input class="message_input" placeholder="Type your message here..." />
-      </div>
-      <div class="send_message">
-        <div class="icon">
-          <img
-            src="{{ url_for('static', filename='images/logos/send_icon.svg') }}"
-            alt="Send Icon"
-          />
-        </div>
-        <div class="text">
-          <b><strong>Send</strong></b>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="message_template">
-    <li class="message">
-      <div class="avatar"></div>
-      <div class="text_wrapper">
-        <div class="text"></div>
-      </div>
-    </li>
-  </div>
 </div>
 
-    <!-- End Session Button -->
-    <!-- End Session Button (now positioned on top left) -->
-  <button id="end-session-btn" class="btn btn-danger">
-      End Session
-  </button>
-
-  <!-- Gmail Email View in a Contained Box -->
-<div id="gmail-ui" class="gmail-ui-container" style="display: block;">
-    <!-- Gmail Header -->
-    <div class="gmail-top-bar">
-      <div class="gmail-logo">
-        <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" alt="Gmail Logo" class="gmail-logo-icon" />
-        <span>Gmail</span>
-      </div>
-      <div class="gmail-search">
-        <input type="text" class="gmail-search-bar" placeholder="Search mail" />
-      </div>
-      <div class="gmail-top-icons">
-        <img src="https://ssl.gstatic.com/ui/v1/icons/mail/profile_mask2.png" alt="User Profile" class="gmail-profile-icon" />
-      </div>
-    </div>
-
-    <!-- Gmail Sidebar (Fixed Position and Non-Overlapping) -->
-    <div class="gmail-sidebar">
-      <ul>
-        <li><a href="#"><i class="fa fa-inbox"></i> Inbox</a></li>
-        <li><a href="#"><i class="fa fa-star"></i> Starred</a></li>
-        <li><a href="#"><i class="fa fa-clock"></i> Snoozed</a></li>
-        <li><a href="#"><i class="fa fa-paper-plane"></i> Sent</a></li>
-        <li><a href="#"><i class="fa fa-file"></i> Drafts</a></li>
-      </ul>
-    </div>
-
-    <!--ADDED ICONS-->
-    <div class="gmail-icons-left">
-      <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/archive_24dp.png" class="gmail-icon">
-      <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/report_24dp.png" class="gmail-icon">
-      <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/delete_24dp.png" class="gmail-icon">
-      <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/mark_as_unread_24dp.png" class="gmail-icon">
-      <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/move_to_24dp.png" class="gmail-icon">
-      <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/label_24dp.png" class="gmail-icon">
-    </div>
-    
-
-    <!-- Gmail Content -->
-    <div class="gmail-content">
-      <div class="gmail-email-header">
-        <h2>{{ email_subject }}</h2>
-        <div class="gmail-email-sender">
-          <strong>{{ email_sender }}</strong>
-          <span>&lt;{{ email_sender_email }}&gt;</span>
+<div id="chatContent">
+    <ul class="messages">
+        {% for convo in convo_history %}
+        <li class="message {{convo.is_bot|message_side_format}} appeared">
+            <div class="avatar"></div>
+            <div class="text_wrapper">
+                <div class="text">{{convo.content}}</div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="bottom_wrapper clearfix">
+        <div class="message_input_wrapper">
+            <input class="message_input" placeholder="Type your message here..." />
         </div>
-        <div class="gmail-recipient">
-          <span>To: username@gmail.com</span> <!-- Hardcoded recipient -->
+        <div class="send_message">
+            <div class="icon">
+                <img src="{{ url_for('static', filename='images/logos/send_icon.svg') }}" alt="Send Icon" />
+            </div>
+            <div class="text">
+                <b><strong>Send</strong></b>
+            </div>
         </div>
-        <div class="gmail-email-date">
-          <span>Thu, 5 Oct 2024, 4:00 PM</span> <!-- Hardcoded date -->
-        </div>
-      </div>
-
-      <div class="gmail-body">
-        <p>{{ email_content }}</p>
-      </div>
-
-      <div class="gmail-reply-options">
-        <button class="gmail-reply-btn"><i class="fa fa-reply"></i> Reply</button>
-        <button class="gmail-reply-all-btn"><i class="fa fa-reply-all"></i> Reply All</button>
-        <button class="gmail-forward-btn"><i class="fa fa-forward"></i> Forward</button>
-      </div>
     </div>
-  </div>
+</div>
 
-    
-    <!-- To pass a variable in external JS -->
-    <!-- No longer used, moved the usage inside python -->
-    <!-- <div id="userInfo" data-userid="{{ userId }}"></div> -->
+<div class="message_template">
+    <li class="message">
+        <div class="avatar"></div>
+        <div class="text_wrapper">
+            <div class="text"></div>
+        </div>
+    </li>
+</div>
+</div>
 
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
-    <!-- JavaScript to Switch Between Tabs @girma_terfa -->
-    <script>
-      function showTab(tabId) {
-        // Initially hide both chat and email
-        document.getElementById('chat').style.display = 'none';
-        document.getElementById('gmail-ui').style.display = 'none';
+        <!-- End Session Button -->
+        <!-- End Session Button (now positioned on top left) -->
+      <button id="end-session-btn" class="btn btn-danger">
+          End Session
+      </button>
+
+      <!-- Gmail Email View in a Contained Box -->
+    <div id="gmail-ui" class="gmail-ui-container" style="display: block;">
+      <!-- Gmail Header -->
+      <div class="gmail-top-bar">
+        <div class="gmail-logo">
+          <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" alt="Gmail Logo" class="gmail-logo-icon" />
+          <span>Gmail</span>
+        </div>
+        <div class="gmail-search">
+          <input type="text" class="gmail-search-bar" placeholder="Search mail" />
+        </div>
+        <div class="gmail-top-icons">
+          <img src="https://ssl.gstatic.com/ui/v1/icons/mail/profile_mask2.png" alt="User Profile" class="gmail-profile-icon" />
+        </div>
+      </div>
+
+      <!-- Gmail Sidebar (Fixed Position and Non-Overlapping) -->
+      <div class="gmail-sidebar">
+        <ul>
+          <li><a href="#"><i class="fa fa-inbox"></i> Inbox</a></li>
+          <li><a href="#"><i class="fa fa-star"></i> Starred</a></li>
+          <li><a href="#"><i class="fa fa-clock"></i> Snoozed</a></li>
+          <li><a href="#"><i class="fa fa-paper-plane"></i> Sent</a></li>
+          <li><a href="#"><i class="fa fa-file"></i> Drafts</a></li>
+        </ul>
+      </div>
+
+      <!--ADDED ICONS-->
+      <div class="gmail-icons-left">
+        <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/archive_24dp.png" class="gmail-icon">
+        <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/report_24dp.png" class="gmail-icon">
+        <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/delete_24dp.png" class="gmail-icon">
+        <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/mark_as_unread_24dp.png" class="gmail-icon">
+        <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/move_to_24dp.png" class="gmail-icon">
+        <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/label_24dp.png" class="gmail-icon">
+      </div>
       
-        // Display the correct tab based on the button clicked
-        if (tabId === 'chat') {
-          document.getElementById('chat').style.display = 'block'; // Show chat
-        } else if (tabId === 'email') {
-          document.getElementById('gmail-ui').style.display = 'block'; // Show email
-        }
-      }                    
-    </script>
+
+      <!-- Gmail Content -->
+      <div class="gmail-content">
+        <div class="gmail-email-header">
+          <h2>{{ email_subject }}</h2>
+          <div class="gmail-email-sender">
+            <strong>{{ email_sender }}</strong>
+            <span>&lt;{{ email_sender_email }}&gt;</span>
+          </div>
+          <div class="gmail-recipient">
+            <span>To: username@gmail.com</span> <!-- Hardcoded recipient -->
+          </div>
+          <div class="gmail-email-date">
+            <span>Thu, 5 Oct 2024, 4:00 PM</span> <!-- Hardcoded date -->
+          </div>
+        </div>
+
+        <div class="gmail-body">
+          <p>{{ email_content }}</p>
+        </div>
+
+        <div class="gmail-reply-options">
+          <button class="gmail-reply-btn"><i class="fa fa-reply"></i> Reply</button>
+          <button class="gmail-reply-all-btn"><i class="fa fa-reply-all"></i> Reply All</button>
+          <button class="gmail-forward-btn"><i class="fa fa-forward"></i> Forward</button>
+        </div>
+      </div>
+    </div>
     
-    
-    <script>
-      // Set the timer to 5 minutes (300 seconds)
-      let timeRemaining = {{TIMER_LIMIT}};
+      <!-- To pass a variable in external JS -->
+      <!-- No longer used, moved the usage inside python -->
+      <!-- <div id="userInfo" data-userid="{{ userId }}"></div> -->
 
-      // Function to start the countdown
-      function startCountdown() {
-          const timer = setInterval(function() {
-              timeRemaining--;
+      <script>
+        // Set the TIMER_LIMIT variable dynamically
+        let timeRemaining = {{TIMER_LIMIT}}; // Replace {{TIMER_LIMIT}} with actual value if server-rendered
+      </script>
 
-              // Calculate minutes and seconds
-              const minutes = Math.floor(timeRemaining / 60);
-              const seconds = timeRemaining % 60;
-
-              // Display the time in MM:SS format
-              document.getElementById('timer').innerHTML = minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
-
-              // TODO Somehow sync with the server side code for exact same display across tabs/devices.
-
-              // If time runs out, clear the timer and redirect to the login page
-              if (timeRemaining <= 0) {
-                  clearInterval(timer);
-                  //TODO: Alert doesn't work.
-                  alert("Session expired! You will be logged out.");
-                  //TODO: Am pretty sure, this href, makes it that
-                  // maybe instead of redirecting to /, /get makes sure python runs before exiting
-                  // @Aditya (Rebooting-me)
-                  window.location.href = "/get";  // Redirect to the login page
-              }
-          }, 1000);  // Update the timer every second (1000ms)
-      }
-
-      // Start the countdown when the page loads
-      window.onload = startCountdown;
-    </script>
+       <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+      
   </body>
 </html>

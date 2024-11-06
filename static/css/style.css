@@ -116,18 +116,22 @@ body {
     margin-top: 15px;
 }
 
-/* Collapsed Chat Window with Red Background */
-.chat_window.collapsed {
-  height: 50px !important; /* Set height for circle */
-  width: 50px !important; /* Set width for circle */
-  border-radius: 50% !important; /* Ensure circular shape */
-  background-color: #ae312f !important; /* Solid red background */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
-  right: 20px !important; /* Gap from right */
-  bottom: 20px !important; /* Gap from bottom */
-  overflow: hidden !important; /* Prevent content overflow */
-  padding: 0 !important;
-}
+/* Collapsed Chat Window with picture Background */
+  #collapsed-chat {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    background-image: url('../images/logos/bot.png'); /* Adjust path if necessary */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 2;
+    cursor: pointer;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  }
 
 .chat_window.expanded {
   height: 500px; /* Full height when expanded */
@@ -183,7 +187,7 @@ body {
   float: right;
   width: 50px;
   height: 50px;
-  background-image: url('../static/images/logos/user.png');
+  background-image: url('../images/logos/user.png');
   background-size: cover;
   border-radius: 50%;
   margin-left: 10px;

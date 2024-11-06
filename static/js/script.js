@@ -204,17 +204,76 @@ $(function () {
   });
 });
 
-function toggleChat() {
-  var chatWindow = document.getElementById("chat");
+// function toggleChat() {
+//   var chatWindow = document.getElementById("chat");
 
-  // Check if the chat is currently collapsed or expanded
-  if (chatWindow.classList.contains("collapsed")) {
-      // Expand the chat window
-      chatWindow.classList.remove("collapsed");
-      chatWindow.classList.add("expanded");
+//   // Check if the chat is currently collapsed or expanded
+//   if (chatWindow.classList.contains("collapsed")) {
+//       // Expand the chat window
+//       chatWindow.classList.remove("collapsed");
+//       chatWindow.classList.add("expanded");
+//   } else {
+//       // Collapse the chat window
+//       chatWindow.classList.remove("expanded");
+//       chatWindow.classList.add("collapsed");
+//   }
+// }
+function toggleChat() {
+  const chatWindow = document.getElementById('chat');
+  const collapsedChat = document.getElementById('collapsed-chat');
+  
+  if (chatWindow.style.display === 'none') {
+      chatWindow.style.display = 'block';
+      collapsedChat.style.display = 'none';
   } else {
-      // Collapse the chat window
-      chatWindow.classList.remove("expanded");
-      chatWindow.classList.add("collapsed");
+      chatWindow.style.display = 'none';
+      collapsedChat.style.display = 'block';
   }
 }
+
+
+
+// <!-- JavaScript to Switch Between Tabs @girma_terfa -->
+
+  function showTab(tabId) {
+    // Initially hide both chat and email
+    document.getElementById('chat').style.display = 'none';
+    document.getElementById('gmail-ui').style.display = 'none';
+  
+    // Display the correct tab based on the button clicked
+    if (tabId === 'chat') {
+      document.getElementById('chat').style.display = 'block'; // Show chat
+    } else if (tabId === 'email') {
+      document.getElementById('gmail-ui').style.display = 'block'; // Show email
+    }
+  }                    
+
+  // Function to start the countdown
+  function startCountdown() {
+      const timer = setInterval(function() {
+          timeRemaining--;
+
+          // Calculate minutes and seconds
+          const minutes = Math.floor(timeRemaining / 60);
+          const seconds = timeRemaining % 60;
+
+          // Display the time in MM:SS format
+          document.getElementById('timer').innerHTML = minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+
+          // TODO Somehow sync with the server side code for exact same display across tabs/devices.
+
+          // If time runs out, clear the timer and redirect to the login page
+          if (timeRemaining <= 0) {
+              clearInterval(timer);
+              //TODO: Alert doesn't work.
+              alert("Session expired! You will be logged out.");
+              //TODO: Am pretty sure, this href, makes it that
+              // maybe instead of redirecting to /, /get makes sure python runs before exiting
+              // @Aditya (Rebooting-me)
+              window.location.href = "/get";  // Redirect to the login page
+          }
+      }, 1000);  // Update the timer every second (1000ms)
+  }
+
+  // Start the countdown when the page loads
+  window.onload = startCountdown;
