@@ -274,7 +274,8 @@ def chatbot():
 
     return render_template(
         "index.html", 
-        userId=session['user_id'], 
+        userId=session['user_id'],
+        user_id_int=int(session['user_id']),
         TIMER_LIMIT=time_left,
         email_sender=email_sender,
         email_subject=email_subject,
@@ -431,7 +432,8 @@ def survey():
         'survey.html', 
         email_sender=email_sender,
         email_subject=email_subject,
-        email_content=email_content
+        email_content=email_content,
+        user_id_int=int(user_id)
     )
 
 
@@ -480,7 +482,7 @@ def pre_survey():
         # Redirect to instructions page
         return redirect(url_for('instructions'))
 
-    return render_template('pre_survey.html')
+    return render_template('pre_survey.html', user_id = int(session['user_id']))
 
 
 
@@ -488,7 +490,7 @@ def pre_survey():
 def instructions():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    return render_template('instructions.html')
+    return render_template('instructions.html', user_id = int(session['user_id']))
 
 
 
