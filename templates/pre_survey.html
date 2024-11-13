@@ -85,6 +85,9 @@
     <div class="container">
         <h1>Pre-Survey</h1>
         {% if user_id % 2 == 1 %}
+
+            <!-- EXPERIMENT - CHATBOT -->
+
             <form method="POST" action="/pre-survey">
 
                 <!-- Open-Ended Question -->
@@ -130,13 +133,16 @@
                     <button type="submit">Submit</button>
                 </div>
             </form>
+
         {% else %}
-        <!-- TODO: Change survey for control -->
+
+        <!-- CONTROL - NO CHATBOT -->
+
         <form method="POST" action="/pre-survey">
 
             <!-- Open-Ended Question -->
             <div class="open-ended-group">
-                <p><strong>1. Which email provider do you use? CONTROL GROUP</strong></p>
+                <p><strong>1. Which email provider do you use?</strong></p>
                 <textarea name="email-provider" rows="4" placeholder="Enter your response here..."></textarea>
             </div>
 
@@ -148,25 +154,9 @@
                 <label><input type="radio" name="email-use-frequency" value="monthly"> Monthly</label>
             </div>
 
-            <!-- Single Choice Question -->
-            <div class="single-choice-group">
-                <p><strong>3. Have you ever interacted with ChatGPT?</strong></p>
-                <label><input type="radio" name="GPT-interaction" value="yes" required> yes</label><br>
-                <label><input type="radio" name="GPT-interaction" value="no"> no</label><br>
-                <label><input type="radio" name="GPT-interaction" value="idk"> I am not sure</label>
-            </div>
-
-            <!-- Single Choice Question -->
-            <div class="single-choice-group">
-                <p><strong>4. Have you ever interacted with chatbot in general?</strong></p>
-                <label><input type="radio" name="BOT-interaction" value="yes" required> yes</label><br>
-                <label><input type="radio" name="BOT-interaction" value="no"> no</label><br>
-                <label><input type="radio" name="BOT-interaction" value="idk"> I am not sure</label>
-            </div>
-
             <!-- Multiple Choice Question -->
             <div class="multiple-choice-group">
-                <p><strong>5. Email and computer literacy (Select all that apply)</strong></p>
+                <p><strong>3. Email and computer literacy (Select all that apply)</strong></p>
                 <label><input type="checkbox" name="computer-literacy" value="file_attatchment_NO"> I do not feel confident attaching a file to an email</label><br>
                 <label><input type="checkbox" name="computer-literacy" value="identify_sender_YES"> I know how to determine who sent me an email</label><br>
                 <label><input type="checkbox" name="computer-literacy" value="identify_spam_YES"> I am confident in my ability to determine whether an email is spam without assistance</label>

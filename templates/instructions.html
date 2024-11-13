@@ -101,6 +101,7 @@
     <!-- Instructions Section -->
         <div class="instructions-section">
             {% if user_id % 2 == 1 %}
+                <!-- EXPERIMENT - CHATBOT -->
                 <div class="instruction-card">
                     <i class="fas fa-list-alt instruction-icon"></i>
                     <div class="instruction-text">
@@ -153,21 +154,48 @@
                     </div>
                 </div>
             {% else %}
-                <!-- TODO complete control instructions -->
+                <!-- CONTROL - NO CHATBOT -->
                 <div class="instruction-card">
-                    <i class="fas fa-list-alt instruction-icon"></i>
-                    <div class="instruction-text">
-                    <b>Step 5:</b> CONTROL GROUP In the next page, imagine you have recieved that email to your inbox and opened the email. You are now
-                    attempting to find out if the email and authentic or if it is spam with the use of the chatbot.
-                    </div>
-                </div>
+                  <i class="fas fa-list-alt instruction-icon"></i>
+                  <div class="instruction-text">
+                  <b>Step 1:</b> In the next page you will be presented with an email that may or may not be spam. Please read the
+                  email carefully and determine if the email provided is spam or not.
+                  </div>
+              </div>
 
-                <div class="instruction-card">
-                    <i class="fas fa-list-alt instruction-icon"></i>
-                    <div class="instruction-text">
-                    <b>Step 6:</b> Click 'Next' when you are ready to proceed.
-                    </div>
-                </div>
+              <div class="instruction-card">
+                  <i class="fas fa-list-alt instruction-icon"></i>
+                  <div class="instruction-text">
+                  <b>Step 2:</b> In the top right corner of the screen, there is a green button that reads 'Proceed to Survey'
+                  and a timer which is set for 5 minutes, if you finish your task early, you may click the green button to proceed
+                  to the post-survey. Otherwise you will be redirected to the final survey after the 5 minutes have transpired.
+                  </div>
+              </div>
+
+              <div class="instruction-card">
+                  <i class="fas fa-list-alt instruction-icon"></i>
+                  <div class="instruction-text">
+                  <b>Step 3:</b> Once you have completed your task or the allotted amount of time has been reached you will be
+                  redirected to the post-survey. Here there will be a survey and two blue buttons on the top of the screen that read
+                  'Survey' and 'Email'. Use these buttons to view the survey or the email if case you need to refer back to it. Please
+                  read the questions carefully and answer all questions to the best of your ability.
+                  </div>
+              </div>
+
+              <div class="instruction-card">
+                  <i class="fas fa-list-alt instruction-icon"></i>
+                  <div class="instruction-text">
+                  <b>Step 4:</b> In the next page, imagine you have recieved that email to your inbox and opened the email. You are now
+                  attempting to find out if the email and authentic or if it is spam.
+                  </div>
+              </div>
+
+              <div class="instruction-card">
+                  <i class="fas fa-list-alt instruction-icon"></i>
+                  <div class="instruction-text">
+                  <b>Step 6:</b> Click 'Next' when you are ready to proceed.
+                  </div>
+              </div>
     
             {% endif %}
 

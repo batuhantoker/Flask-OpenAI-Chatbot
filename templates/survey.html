@@ -100,6 +100,9 @@
             <h1>Post-Survey</h1>
             <form method="POST" action="/survey">
                 {% if user_id_int % 2 == 1 %}
+
+                    <!-- EXPERIMENT - CHATBOT -->
+
                         <!-- Multiple Choice Question -->
                     <div class="multiple-choice-group">
                         <p><strong>1. How would you respond to the email you were shown? (Please select all that apply)</strong></p>
@@ -143,9 +146,27 @@
                     </div>
                 
                 {% else %}
-                    <!-- TODO complete control survey -->
+
+                    <!-- CONTROL - NO CHATBOT -->
+
+                    <div class="multiple-choice-group">
+                        <p><strong>1. How would you respond to the email you were shown? (Please select all that apply)</strong></p>
+                        <label><input type="checkbox" name="user-email-action" value="keep-save-or-archive"> Keep, save, or archive the email</label><br>
+                        <label><input type="checkbox" name="user-email-action" value="click_link"> Click on link or links provided (if any)</label><br>
+                        <label><input type="checkbox" name="user-email-action" value="forward"> Forward the email to somoene else</label><br>
+                        <label><input type="checkbox" name="user-email-action" value="reply"> Reply to the email</label><br>
+                        <label><input type="checkbox" name="user-email-action" value="delete"> Delete the email</label><br>
+                        <label><input type="checkbox" name="user-email-action" value="other"> Other (Please specify)</label>
+                    </div>
+
+                    <!-- Open-Ended Question -->
+                    <div class="open-ended-group">
+                        <p><strong>2. If you selected 'Other' as your response to the previous question, please elaborate on what action you would take otherwise type 'N/A'</strong></p>
+                        <textarea name="other-action-explanation" rows="4" placeholder="Enter your response here..."></textarea>
+                    </div>
+
                     <div class="single-choice-group">
-                        <p><strong>3. CONTROL GROUP How would you categorize this type of email?</strong></p>
+                        <p><strong>3. How would you categorize this type of email?</strong></p>
                         <label><input type="radio" name="user-verdict" value="spam" required> Spam </label><br>
                         <label><input type="radio" name="user-verdict" value="ham" required> Not spam </label><br>
                         <label><input type="radio" name="user-verdict" value="potentially_spam"> Potentially spam </label>
@@ -155,6 +176,18 @@
                     <div class="open-ended-group">
                         <p><strong>4. Based on your previous answer, please explain why you selected that choice</strong></p>
                         <textarea name="category-explanation" rows="4" placeholder="Enter your response here..."></textarea>
+                    </div>
+
+                    <div class="single-choice-group">
+                        <p><strong>5. Did you learn anything new about detecting spam emails while viewing the email?</strong></p>
+                        <label><input type="radio" name="did-user-learn" value="yes" required> Yes </label><br>
+                        <label><input type="radio" name="did-user-learn" value="no"> No </label>
+                    </div>
+
+                    <!-- Open-Ended Question -->
+                    <div class="open-ended-group">
+                        <p><strong>6. If your previous answer was'Yes', please briefly describe what you learned. </strong></p>
+                        <textarea name="learning-explanation" rows="4" placeholder="Enter your response here..."></textarea>
                     </div>
                 
                 {% endif %}
