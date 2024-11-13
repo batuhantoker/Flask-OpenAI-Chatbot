@@ -97,6 +97,21 @@ def initialize_user_data(user_id):
 
 
 # A timer check helper function
+# def session_timeout():
+#     # Check if the session has a start time
+#     if 'start_time' in session:
+#         current_time = datetime.datetime.now(datetime.timezone.utc)
+#         start_time = session['start_time']
+        
+#         elapsed_time = math.floor((current_time - start_time).total_seconds())
+
+#         # If the timer limit has been exceeded, end the session and redirect
+#         if elapsed_time > TIMER_LIMIT:
+#             return redirect(url_for('end_session'))
+    
+#     return None
+
+# A timer check helper function
 def session_timeout():
     # Check if the session has a start time
     if 'start_time' in session:
@@ -107,9 +122,11 @@ def session_timeout():
 
         # If the timer limit has been exceeded, end the session and redirect
         if elapsed_time > TIMER_LIMIT:
+            session['timeout_occurred'] = True
             return redirect(url_for('end_session'))
     
     return None
+
     
 
 
@@ -354,6 +371,34 @@ def save_user_session_data():
 
 # Function that will end the session for the user, either button was pressed or 
 # time is over.
+# @application.route("/end-session")
+# def end_session():
+#     user_id = session.get('user_id')
+
+#     if user_id:
+#         # Save user session data
+#         save_user_session_data()
+        
+#         # Fetch the user record
+#         user = svc.find_account_by_user_id(user_id)
+#         if user:
+#             if not user.survey_completed:
+#                 user.timer_is_running = False  # Stop the timer
+#                 user.save()
+
+#         # Store user_id temporarily to link with survey
+#         session['temp_user_id'] = user_id
+
+#     # Clear the session except for temp_user_id
+#     temp_user_id = session.get('temp_user_id')
+#     temp_email_id = session.get("email_id")
+#     session.clear()
+#     session['temp_user_id'] = temp_user_id
+#     session["temp_email_id"] = temp_email_id
+
+#     # Redirect to survey page
+#     return redirect(url_for('survey', user_id=temp_user_id))
+
 @application.route("/end-session")
 def end_session():
     user_id = session.get('user_id')
@@ -378,10 +423,65 @@ def end_session():
     session.clear()
     session['temp_user_id'] = temp_user_id
     session["temp_email_id"] = temp_email_id
-
     # Redirect to survey page
+
     return redirect(url_for('survey', user_id=temp_user_id))
 
+
+
+
+# @application.route("/survey", methods=['GET', 'POST'])
+# def survey():
+#     user_id = session.get('temp_user_id') or request.args.get('user_id')
+
+#     if not user_id:
+#         flash("Session has expired. Please log in again.")
+#         return redirect(url_for('login'))
+
+#     if request.method == 'POST':
+#         # Retrieve survey responses and handle multiple selections
+#         survey_responses = {
+#             key: ", ".join(request.form.getlist(key)) if len(request.form.getlist(key)) > 1 else request.form[key]
+#             for key in request.form.keys()
+#         }
+
+#         # Retrieve survey responses from the form
+#         #survey_response = request.form.to_dict()
+#         # Collect multiple checkbox values for 'user-email-action' field
+#         #survey_response['user-email-action'] = request.form.getlist('user-email-action')
+        
+#         #survey_response['features'] = request.form.getlist('features')
+
+#         # Find the user and update survey responses
+#         user = svc.find_account_by_user_id(user_id)
+#         if user:
+#             user.survey_responses = survey_responses
+#             user.survey_completed = True  # Mark survey as completed
+#             user.timer_is_running = False  # Ensure the timer is stopped
+#             user.save()
+
+#         flash("Survey responses saved successfully. Session ended.")
+#         session.clear()  # Clear the session fully after survey is completed
+
+#         # Render a template with a redirect script
+#         return render_template("redirect_after_submit.html", redirect_url="https://docs.google.com/document/d/1dqDm4nkdzaRoT9GOtNfQEzQODbYUvxOMkugTin3n48c/edit?tab=t.0")
+
+#         #return redirect(url_for('login'))
+
+#     # Fetch email to display
+#     email = svc.getEmailRecordByUuid(session["temp_email_id"])
+#     email_sender = email["From"].values[0]
+#     email_subject = email["Subject"].values[0]
+#     email_content = email["Email Content"].values[0]
+
+
+#     return render_template(
+#         'survey.html', 
+#         email_sender=email_sender,
+#         email_subject=email_subject,
+#         email_content=email_content,
+#         user_id_int=int(user_id)
+#     )
 
 @application.route("/survey", methods=['GET', 'POST'])
 def survey():
@@ -398,13 +498,6 @@ def survey():
             for key in request.form.keys()
         }
 
-        # Retrieve survey responses from the form
-        #survey_response = request.form.to_dict()
-        # Collect multiple checkbox values for 'user-email-action' field
-        #survey_response['user-email-action'] = request.form.getlist('user-email-action')
-        
-        #survey_response['features'] = request.form.getlist('features')
-
         # Find the user and update survey responses
         user = svc.find_account_by_user_id(user_id)
         if user:
@@ -416,17 +509,14 @@ def survey():
         flash("Survey responses saved successfully. Session ended.")
         session.clear()  # Clear the session fully after survey is completed
 
-        # Render a template with a redirect script
+        # Redirect to the thank-you page or external link
         return render_template("redirect_after_submit.html", redirect_url="https://docs.google.com/document/d/1dqDm4nkdzaRoT9GOtNfQEzQODbYUvxOMkugTin3n48c/edit?tab=t.0")
 
-        #return redirect(url_for('login'))
-
-    # Fetch email to display
+    # Fetch email to display in the survey page
     email = svc.getEmailRecordByUuid(session["temp_email_id"])
     email_sender = email["From"].values[0]
     email_subject = email["Subject"].values[0]
     email_content = email["Email Content"].values[0]
-
 
     return render_template(
         'survey.html', 
@@ -435,7 +525,6 @@ def survey():
         email_content=email_content,
         user_id_int=int(user_id)
     )
-
 
 
 @application.route("/consent", methods=['GET', 'POST'])
