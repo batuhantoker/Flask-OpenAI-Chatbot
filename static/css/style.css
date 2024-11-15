@@ -501,6 +501,7 @@ body {
   border-radius: 35px;
   margin: 0 auto;
   position: relative;
+}
 /*end_chat_window_feature*/
 
 /* Footer Styling (Separate feature) */
@@ -518,6 +519,7 @@ body {
   width: 55px;
   height: 55px;
   border: #3A3A3A 12px solid;
+}
 
 .footer #button:hover {
   width: 55px;
@@ -562,6 +564,7 @@ body {
   top: 0;
   left: 0;
   background: #4e919c;
+}
 
 .footer #container {
   margin-top: 5px;
@@ -579,6 +582,7 @@ body {
   font-weight: 100;
   margin-top: 70px;
   margin-left: 10px;
+}
 
 .footer h3 {
   font-family: 'Arial';
