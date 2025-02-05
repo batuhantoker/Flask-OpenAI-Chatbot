@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -46,17 +44,16 @@ body {
   font-family: "Calibri", "Roboto", sans-serif;
 }
 .chat_window {
-  position: absolute;
+  position: fixed;
   width: calc(100% - 20px);
   max-width: 800px;
-  height: 500px;
+  height: calc(100vh - 100px);
   border-radius: 10px;
   background-color: #fff;
   left: 50%;
   top: 50%;
   transform: translateX(-50%) translateY(-50%);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-  background-color: #fff;
   overflow: hidden;
 }
 
@@ -100,8 +97,8 @@ body {
   list-style: none;
   padding: 20px 10px 0 10px;
   margin: 0;
-  height: 347px;
-  overflow: scroll;
+  height: calc(100% - 120px);
+  overflow-y: auto;
 }
 .messages .message {
   clear: both;
@@ -129,7 +126,7 @@ body {
   float: left;
   width: 50px;
   height: 50px;
-  background-image: url("https://pas-wordpress-media.s3.amazonaws.com/wp-content/uploads/2013/08/Customer-service-woman-on-headset-gives-OK-1024x770.jpg");
+  background-image: url("{{ url_for('static', filename='images/avatar.jpg') }}");
   background-size: cover;
   border-radius: 50%;
   margin-right: 10px;
@@ -187,22 +184,40 @@ body {
 }
 
 .bottom_wrapper {
-  position: relative;
-  width: 100%;
-  background-color: #fff;
-  padding: 20px 20px;
-  position: absolute;
-  bottom: 0;
+    position: relative;
+    width: 100%;
+    background-color: #fff;
+    padding: 20px 20px;
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
+
 .bottom_wrapper .message_input_wrapper {
-  display: inline-block;
-  height: 50px;
-  border-radius: 25px;
-  border: 1px solid #bcbdc0;
-  width: calc(100% - 160px);
-  position: relative;
-  padding: 0 20px;
+    flex: 1;
+    height: 50px;
+    border-radius: 25px;
+    border: 1px solid #bcbdc0;
+    position: relative;
+    padding: 0 20px;
 }
+
+.bottom_wrapper .send_message {
+    width: 140px;
+    height: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px;
+    background-color: #a3d063;
+    border: 2px solid #a3d063;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.2s linear;
+}
+
 .bottom_wrapper .message_input_wrapper .message_input {
   border: none;
   height: 100%;
@@ -212,23 +227,12 @@ body {
   outline-width: 0;
   color: gray;
 }
-.bottom_wrapper .send_message {
-  width: 140px;
-  height: 50px;
-  display: inline-block;
-  border-radius: 50px;
-  background-color: #a3d063;
-  border: 2px solid #a3d063;
-  color: #fff;
-  cursor: pointer;
-  transition: all 0.2s linear;
-  text-align: center;
-  float: right;
-}
+
 .bottom_wrapper .send_message:hover {
   color: #a3d063;
   background-color: #fff;
 }
+
 .bottom_wrapper .send_message .text {
   font-size: 18px;
   font-weight: 300;
@@ -240,83 +244,7 @@ body {
   display: none;
 }
 
-.footer #button{
-	width:55px;
-	height:55px;
-	border: #4e919c 12px solid;
-	border-radius:35px;
-	margin:0 auto;
-	position:relative;
-	-webkit-transition: all 1s ease;
-    -moz-transition: all 1s ease;
-    -o-transition: all 1s ease;
-    -ms-transition: all 1s ease;
-    transition: all 1s ease;
-}
-.footer #button:hover{
-	width:55px;
-	height:55px;
-	border: #3A3A3A 12px solid;
-	-webkit-transition: all 1s ease;
-    -moz-transition: all 1s ease;
-    -o-transition: all 1s ease;
-    -ms-transition: all 1s ease;
-    transition: all 1s ease;
-	position:relative;
-}
-.footer {
-	bottom:0;
-	left:0;
-	position:fixed;
-    width: 100%;
-    height: 2em;
-    overflow:hidden;
-    margin:0 auto;
-	-webkit-transition: all 1s ease;
-    -moz-transition: all 1s ease;
-    -o-transition: all 1s ease;
-    -ms-transition: all 1s ease;
-    transition: all 1s ease;
-	z-index:999;
-}
-.footer:hover {
-	-webkit-transition: all 1s ease;
-    -moz-transition: all 1s ease;
-    -o-transition: all 1s ease;
-    -ms-transition: all 1s ease;
-    transition: all 1s ease;
-	height: 10em;
-}
-.footer #container{
-	margin-top:5px;
-	width:100%;
-height:100%;
-  position:relative;
-  top:0;
-  left:0;
-	background: #4e919c;
-}
-.footer #cont{
-  position:relative;
-  top:-45px;
-  right:190px;
-	width:150px;
-	height:auto;
-	margin:0 auto;
-}
-.footer_center{
-	width:500px;
-	float:left;
-  text-align:center;
-}
-.footer h3{
-	font-family: 'Arial';
-	font-size: 20px;
-	font-weight: 100;
-	margin-top:70px;
-	margin-left:10px;
-}
- </style>
+</style>
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -326,15 +254,10 @@ height:100%;
 
 
 <body>
-<div class="container" style="border: 1px solid black; border-radius: 10px; padding: 10px; background-color: #4e919c; margin: auto;">
-    <p style="font-family: Arial; color: white;font-size: 12px">
-	  <small> Supported languages: Albanian, Arabic, Armenian, Awadhi, Azerbaijani, Bashkir, Basque,Belarusian, Bengali, Bhojpuri, Bosnian, Brazilian Portuguese, Bulgarian, Cantonese (Yue), Catalan, Chhattisgarhi, Chinese, Croatian, Czech, Danish, Dogri, Dutch, English, Estonian, Faroese, Finnish, French, Galician, Georgian, German, Greek, Gujarati, Haryanvi, Hindi, Hungarian, Indonesian, Irish, Italian, Japanese, Javanese, Kannada, Kashmiri, Kazakh, Konkani, Korean, Kyrgyz, Latvian, Lithuanian, Macedonian, Maithili, Malay, Maltese, Mandarin, Mandarin Chinese, Marathi, Marwari, Min Nan, Moldovan, Mongolian, Montenegrin, Nepali, Norwegian, Oriya, Pashto, Persian (Farsi), Polish, Portuguese, Punjabi, Rajasthani, Romanian, Russian, Sanskrit, Santali, Serbian, Sindhi, Sinhala, Slovak, Slovene, Slovenian, Spanish, Swahili, Swedish, Tajik, Tamil, Tatar, Telugu, Thai, Turkish, Turkmen, Ukrainian, Urdu, Uzbek, Vietnamese, Welsh, Wu
-    </small></p>
-</div>
 <div class="chat_window">
 
     <div class="top_menu">
-        <div class="title">Customer Service:</div>
+        <div class="title">Jaspppppppppppppper!</div>
     </div>
     <ul class="messages"></ul>
     <div class="bottom_wrapper clearfix">
@@ -359,20 +282,6 @@ height:100%;
 </div>
 
 </div>
-<div class="footer">
-  <div id="button"></div>
-<div id="container">
-<div id="cont">
-<div class="footer_center">
-	   <h3>It is an AI model. &#169; <a href="https://www.batuhantoker.com/">Batuhan Toker</a>   </h3>
-</div>
-</div>
-</div>
-</div>
-</div>
-
-
-
 
 
 <script>
@@ -448,7 +357,7 @@ return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
         });
             // Add "Writing..." message
     writingMessage = new Message({
-        text: 'Batuhan here, how can I help you today?. Fluent in 95 languages, I am always ready to assist you quickly and efficiently. Just type!',
+        text: 'Jasper here, are you ready for an adventure?',
         message_side: 'left'
     });
     writingMessage.draw();

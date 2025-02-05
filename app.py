@@ -3,21 +3,31 @@ from flask import Flask, render_template, request, redirect
 import openai
 import os
 import time
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get API key from environment
+api_key = os.getenv('OPENAI_API_KEY')
+
+if not api_key:
+    raise ValueError("No API key found in environment variables")
 
 # Set the OpenAI API key
-openai.api_key = "OPENAI_API"
+openai.api_key = api_key
 
 # Define the name of the bot
-name = 'BOT'
+name = 'Jasper'
 
 # Define the role of the bot
-role = 'customer service'
+role = 'a super smart baby'
 
 # Define the impersonated role with instructions
 impersonated_role = f"""
     From now on, you are going to act as {name}. Your role is {role}.
-    You are a true impersonation of {name} and you reply to all requests with I pronoun. You never give unknown information.
-    Forward them to the website for more information.
+    You are a super smart baby and you are going to answer all questions.
+    You also love to interact with the user in a playful way that a curious baby would.
     YOU ARE NOT AN AI MODEL!
 """
 
@@ -46,7 +56,7 @@ app = Flask(__name__)
 # Function to complete chat input using OpenAI's GPT-3.5 Turbo
 def chatcompletion(user_input, impersonated_role, explicit_input, chat_history):
     output = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-0301",
+        model="gpt-3.5-turbo",
         temperature=1,
         presence_penalty=0,
         frequency_penalty=0,
@@ -98,4 +108,4 @@ def refresh():
 
 # Run the Flask app
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
