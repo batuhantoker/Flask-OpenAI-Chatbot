@@ -1,0 +1,11 @@
+config.json
+logs/
+robot_avatar_links.txt
+used_ids.json
+docker-credential-pass-v0.6.0-amd64.tar.gz
+myenv
+.venv
+__pycache__
+.DS_Store
+*.ipynb
+*.pem

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f8;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        p {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        input[type="radio"],
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .multiple-choice-group,
+        .likert-scale-group,
+        .rating-group {
+            margin-bottom: 20px;
+        }
+        .submit-btn {
+            display: flex;
+            justify-content: center;
+        }
+        .likert-scale-group table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .likert-scale-group th,
+        .likert-scale-group td {
+            text-align: center;
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pre-Survey</h1>
+        {% if user_id % 2 == 1 %}
+
+            <!-- EXPERIMENT - CHATBOT -->
+
+            <form method="POST" action="/pre-survey">
+
+                <!-- Open-Ended Question -->
+                <div class="open-ended-group">
+                    <p><strong>1. Which email provider do you use?</strong></p>
+                    <textarea name="email-provider" rows="4" placeholder="Enter your response here..."></textarea>
+                </div>
+
+                <!-- Single Choice Question -->
+                <div class="single-choice-group">
+                    <p><strong>2. How often do you use your email?</strong></p>
+                    <label><input type="radio" name="email-use-frequency" value="daily" required> Daily</label><br>
+                    <label><input type="radio" name="email-use-frequency" value="weekly"> Weekly</label><br>
+                    <label><input type="radio" name="email-use-frequency" value="monthly"> Monthly</label>
+                </div>
+
+                <!-- Single Choice Question -->
+                <div class="single-choice-group">
+                    <p><strong>3. Have you ever interacted with ChatGPT?</strong></p>
+                    <label><input type="radio" name="GPT-interaction" value="yes" required> yes</label><br>
+                    <label><input type="radio" name="GPT-interaction" value="no"> no</label><br>
+                    <label><input type="radio" name="GPT-interaction" value="idk"> I am not sure</label>
+                </div>
+
+                <!-- Single Choice Question -->
+                <div class="single-choice-group">
+                    <p><strong>4. Have you ever interacted with chatbot in general?</strong></p>
+                    <label><input type="radio" name="BOT-interaction" value="yes" required> yes</label><br>
+                    <label><input type="radio" name="BOT-interaction" value="no"> no</label><br>
+                    <label><input type="radio" name="BOT-interaction" value="idk"> I am not sure</label>
+                </div>
+
+                <!-- Multiple Choice Question -->
+                <div class="multiple-choice-group">
+                    <p><strong>5. Email and computer literacy (Select all that apply)</strong></p>
+                    <label><input type="checkbox" name="computer-literacy" value="file_attatchment_NO"> I do not feel confident attaching a file to an email</label><br>
+                    <label><input type="checkbox" name="computer-literacy" value="identify_sender_YES"> I know how to determine who sent me an email</label><br>
+                    <label><input type="checkbox" name="computer-literacy" value="identify_spam_YES"> I am confident in my ability to determine whether an email is spam without assistance</label>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="submit-btn">
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+
+        {% else %}
+
+        <!-- CONTROL - NO CHATBOT -->
+
+        <form method="POST" action="/pre-survey">
+
+            <!-- Open-Ended Question -->
+            <div class="open-ended-group">
+                <p><strong>1. Which email provider do you use?</strong></p>
+                <textarea name="email-provider" rows="4" placeholder="Enter your response here..."></textarea>
+            </div>
+
+            <!-- Single Choice Question -->
+            <div class="single-choice-group">
+                <p><strong>2. How often do you use your email?</strong></p>
+                <label><input type="radio" name="email-use-frequency" value="daily" required> Daily</label><br>
+                <label><input type="radio" name="email-use-frequency" value="weekly"> Weekly</label><br>
+                <label><input type="radio" name="email-use-frequency" value="monthly"> Monthly</label>
+            </div>
+
+            <!-- Multiple Choice Question -->
+            <div class="multiple-choice-group">
+                <p><strong>3. Email and computer literacy (Select all that apply)</strong></p>
+                <label><input type="checkbox" name="computer-literacy" value="file_attatchment_NO"> I do not feel confident attaching a file to an email</label><br>
+                <label><input type="checkbox" name="computer-literacy" value="identify_sender_YES"> I know how to determine who sent me an email</label><br>
+                <label><input type="checkbox" name="computer-literacy" value="identify_spam_YES"> I am confident in my ability to determine whether an email is spam without assistance</label>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="submit-btn">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+</body>
+</html>

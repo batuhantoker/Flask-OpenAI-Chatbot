@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Consent Form</title>
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+      }
+
+      /* Title Styling */
+      .page-title {
+        text-align: center;
+        font-size: 30px;
+        font-weight: bold;
+        margin: 20px 0;
+        color: #000000;
+      }
+
+      /* Centered PDF Container */
+      .consent-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 85%; /* Adjusted for title and button space */
+        margin: auto;
+        padding: 0;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        max-width: 50%; /* Wider to reduce white space */
+      }
+
+      /* PDF Viewer */
+      .pdf-viewer {
+        width: 80%;
+        height: 90%; /* Fills the container */
+        border: none;
+      }
+
+      .disclaimer-container {
+        text-align: center;
+        margin-top: 10px;
+      }
+
+      .disclaimer-text {
+        font-size: 15px;
+        color: #00000;
+        margin-bottom: 10px;
+      }
+
+      .next-button {
+        background-color: #4e919c;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 12px 24px;
+        font-size: 18px;
+        cursor: pointer;
+      }
+
+      .next-button:hover {
+        background-color: #3b6d71;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Title -->
+    <div class="page-title">User Consent Form</div>
+
+    <!-- PDF Container -->
+    <div class="consent-container">
+      <iframe
+        src="{{ url_for('static', filename='pdf/Updated_IRB.pdf') }}"
+        class="pdf-viewer"
+        title="Consent Form"
+      ></iframe>
+    </div>
+
+    <!-- Disclaimer and Next Button -->
+    <div class="disclaimer-container">
+      <div class="disclaimer-text">
+        By clicking <strong>Next</strong>, you are indicating that you have read
+        the consent form and wish to participate in this study.
+      </div>
+      <button class="next-button" onclick="goToPreSurvey()">Next</button>
+    </div>
+
+    <script>
+      function goToPreSurvey() {
+        window.location.href = "/pre-survey"; //redirect
+      }
+    </script>
+  </body>
+</html>
