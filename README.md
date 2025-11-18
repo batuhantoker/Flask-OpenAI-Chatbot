@@ -1,23 +1,21 @@
-# Flask-OpenAI-Logging Information
-A Flask web app that can log user and GPT interaction data.
+# Flask-OpenAI-Chatbot
+A Flask chatbot application that can impersonate characters and is powered by OpenAI's GPT-3.5 Turbo. This chatbot allows users to interact with different characters, each with their unique backgrounds and personalities. Additionally, it features a user-friendly chatbot UI written in HTML.
 
 ![Python Version](https://img.shields.io/badge/Python-3.7%20%7C%203.8%20%7C%203.9-blue)
 ![Flask Version](https://img.shields.io/badge/Flask-2.0.1-green)
 ![OpenAI GPT Version](https://img.shields.io/badge/OpenAI%20GPT-3.5%20Turbo-yellow)
 
+
+## Features
+
+- Impersonate various characters with distinct backgrounds and personalities.
+- Utilize OpenAI's GPT-3.5 Turbo for intelligent responses.
+- User-friendly chatbot interface built with HTML and Flask.
+- Store chat history for each character in separate text files.
+- Easy-to-define character profiles.
+
 ## Getting Started
 
-# Future TODO
-- Update README
-- Added convo history to the DB (Remove csv and json) (JAY)
-- Add a character limit on the input text. (Think about spam email lengths vs token limit on gpt)
-- maybe add a readmore button too (Assuming we will have emails pasted)
-
-# How to run Mongo DB
-1. Just install Mongo DB on your system and make sure the server is running.
-2. Everything else (DB, Collections) are auto created (lazily), so don't need to do anything manually. Everything is written in the code.
-3. I rec using mongo compass to visualize the db!
----
 ### Prerequisites
 
 - Python 3.7+ installed on your system.
@@ -29,12 +27,12 @@ A Flask web app that can log user and GPT interaction data.
 1. Clone this repository to your local machine:
 
    ```bash
-   git clone https://github.com/amoralesflor01/GPT_logging_webpage.git
+   git clone https://github.com/batuhantoker/Flask-OpenAI-Chatbot.git
     ```
 
-2. 2. Navigate to the project directory:https://github.com/amoralesflor01/GPT_logging_webpage.git
+2. 2. Navigate to the project directory:https://github.com/batuhantoker/Flask-OpenAI-Chatbot
 ```bash
-cd GPT_logging_webpage
+cd multi-character-chatbot
 ```
 3. Install the required Python packages:
 ```bash
@@ -84,4 +82,9 @@ python app.py
 ```
 b. Open your web browser and go to http://localhost:5000 to interact with the chatbot.
 
+c. Choose a character to impersonate from the character selection menu.
+
+d. Engage in conversations with the chatbot and experience different personalities and backgrounds.
+
+Your chatbot app is now fully configured and ready for use. You can customize character profiles and the chatbot UI as needed to create engaging and interactive conversations.
 
