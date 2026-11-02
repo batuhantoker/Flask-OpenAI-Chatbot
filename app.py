@@ -1,11 +1,11 @@
 # Import necessary libraries
 from flask import Flask, render_template, request, redirect
-import openai
 import os
 import time
+from openai import OpenAI
 
 # Set the OpenAI API key
-openai.api_key = "OPENAI_API"
+client = OpenAI(api_key="OPENAI_API")
 
 # Define the name of the bot
 name = 'BOT'
@@ -45,7 +45,7 @@ app = Flask(__name__)
 
 # Function to complete chat input using OpenAI's GPT-3.5 Turbo
 def chatcompletion(user_input, impersonated_role, explicit_input, chat_history):
-    output = openai.ChatCompletion.create(
+    output = client.chat.completions.create(
         model="gpt-3.5-turbo-0301",
         temperature=1,
         presence_penalty=0,
@@ -57,8 +57,8 @@ def chatcompletion(user_input, impersonated_role, explicit_input, chat_history):
         ]
     )
 
-    for item in output['choices']:
-        chatgpt_output = item['message']['content']
+    for item in output.choices:
+        chatgpt_output = item.message.content
 
     return chatgpt_output
 
